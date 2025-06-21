@@ -7,14 +7,28 @@ interface TokenResponseEncrypt {
   }
 }
 
+export async function GET(request: Request) {
+  const url = new URL(request.url)
+  const refresh_token = url.searchParams.get('refresh_token')
+  const refresh_ui = url.searchParams.get('refresh_ui')
+  return handleRequest(refresh_token || refresh_ui || '')
+}
+
 export async function POST(request: Request) {
+  const { refresh_token, refresh_ui } = await request.json()
+  return handleRequest(refresh_token || refresh_ui || '')
+}
+
+async function handleRequest(refresh_token: string) {
   try {
-    const { refresh_token } = await request.json()
+    if (!refresh_token) {
+      throw new Error('Empty refresh token')
+    }
+
     const t = Math.floor(Date.now() / 1000)
-    
     const sendData = { 
       ...getParams(t), 
-      refresh_token: refresh_token,
+      refresh_token,
       "Content-Type": "application/json" 
     }
     
