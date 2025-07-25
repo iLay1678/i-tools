@@ -6,6 +6,7 @@ on:
 jobs:
   del_runs:
     runs-on: ubuntu-latest
+    if: github.event.repository.fork == false
     permissions:
       actions: write
       contents: read
