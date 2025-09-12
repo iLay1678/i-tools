@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { Inter } from 'next/font/google'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { ConfigProvider, Layout, Typography, Space, App } from 'antd'
 import { HomeOutlined, ToolOutlined, GithubOutlined, HeartOutlined } from '@ant-design/icons'
@@ -10,8 +9,6 @@ import './globals.css'
 
 const { Header, Content, Footer } = Layout
 const { Title, Text } = Typography
-
-const inter = Inter({ subsets: ['latin'] })
 
 const antdTheme = {
   token: {
@@ -23,7 +20,7 @@ const antdTheme = {
     borderRadius: 16,
     borderRadiusLG: 20,
     borderRadiusXS: 8,
-    fontFamily: inter.style.fontFamily,
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
     fontSize: 14,
     fontSizeLG: 16,
     fontSizeXL: 20,
@@ -62,7 +59,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className={inter.className}>
+      <body>
         <AntdRegistry>
           <ConfigProvider theme={antdTheme}>
             <App>
