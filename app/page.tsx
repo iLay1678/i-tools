@@ -23,6 +23,7 @@ import {
   ToolOutlined,
   AppstoreOutlined,
   ThunderboltOutlined,
+  ScissorOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import { useState } from "react";
@@ -42,6 +43,18 @@ interface Tool {
 }
 
 const tools: Tool[] = [
+  {
+    id: "text-formatter",
+    title: "文字格式化工具",
+    description:
+      "快速清理复制文本的格式、空格和换行符，去除多余的格式信息，还原纯净的文字内容，适用于处理从Word、PDF或网页复制的文本",
+    icon: <ScissorOutlined />,
+    href: "/text-formatter",
+    status: "available",
+    category: "encoding",
+    tags: ["文字格式化", "去格式", "文本清理", "去空格"],
+    color: "#eb2f96",
+  },
   {
     id: "random-string",
     title: "随机字符串生成器",

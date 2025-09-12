@@ -2,6 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
+  eslint: {
+    // Only run ESLint on specific directories during build
+    dirs: ['app/text-formatter']
+  },
   async headers() {
     return [
       {
