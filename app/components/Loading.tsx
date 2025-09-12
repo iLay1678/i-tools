@@ -1,29 +1,29 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
 export default function Loading() {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkPageLoaded = () => {
-      if (document.readyState === 'complete') {
-        setLoading(false)
+      if (document.readyState === "complete") {
+        setLoading(false);
       }
-    }
+    };
 
-    if (document.readyState === 'complete') {
-      setLoading(false)
+    if (document.readyState === "complete") {
+      setLoading(false);
     } else {
-      window.addEventListener('load', checkPageLoaded)
+      window.addEventListener("load", checkPageLoaded);
     }
 
     return () => {
-      window.removeEventListener('load', checkPageLoaded)
-    }
-  }, [])
+      window.removeEventListener("load", checkPageLoaded);
+    };
+  }, []);
 
-  if (!loading) return null
+  if (!loading) return null;
 
   return (
     <div className="loading-overlay">
@@ -93,5 +93,5 @@ export default function Loading() {
         }
       `}</style>
     </div>
-  )
+  );
 }

@@ -9,30 +9,31 @@ interface QrCodeData {
 
 export async function POST() {
   try {
-    const response = await fetch('https://api.extscreen.com/aliyundrive/qrcode', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("https://api.extscreen.com/aliyundrive/qrcode", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        scopes: ["user:base", "file:all:read", "file:all:write"].join(','),
+        scopes: ["user:base", "file:all:read", "file:all:write"].join(","),
         width: 500,
         height: 500,
-      })
-    })
+      }),
+    });
 
     if (!response.ok) {
-      throw new Error('Failed to generate QR code')
+      throw new Error("Failed to generate QR code");
     }
 
-    const result: ApiResponse<QrCodeData> = await response.json()
+    const result: ApiResponse<QrCodeData> = await response.json();
     
     return Response.json({
       qr_link: result.data.qrCodeUrl,
-      sid: result.data.sid
-    })
-  } catch (error: any) {
+      sid: result.data.sid,
+    });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     return Response.json(
-      { error: error.message },
-      { status: 500 }
-    )
+      { error: message },
+      { status: 500 },
+    );
   }
 }

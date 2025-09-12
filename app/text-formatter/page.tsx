@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from "react";
 import {
   Card,
   Input,
@@ -14,8 +14,8 @@ import {
   Statistic,
   App,
   Switch,
-  Divider
-} from 'antd';
+  Divider,
+} from "antd";
 import {
   FormatPainterOutlined,
   CopyOutlined,
@@ -25,15 +25,15 @@ import {
   LineOutlined,
   ScissorOutlined,
   CheckCircleOutlined,
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 export default function TextFormatterPage() {
   const { message } = App.useApp();
-  const [inputText, setInputText] = useState('');
-  const [outputText, setOutputText] = useState('');
+  const [inputText, setInputText] = useState("");
+  const [outputText, setOutputText] = useState("");
   const [removeSpaces, setRemoveSpaces] = useState(true);
   const [removeLineBreaks, setRemoveLineBreaks] = useState(true);
   const [removeExtraWhitespace, setRemoveExtraWhitespace] = useState(true);
@@ -50,9 +50,9 @@ export default function TextFormatterPage() {
   // 计算文本统计信息
   const calculateStats = useCallback((original: string, formatted: string) => {
     const originalChars = original.length;
-    const originalLines = original.split('\n').length;
+    const originalLines = original.split("\n").length;
     const formattedChars = formatted.length;
-    const formattedLines = formatted.split('\n').length;
+    const formattedLines = formatted.split("\n").length;
     
     // 计算移除的空格数量（包括多个连续空格）
     const originalSpaces = (original.match(/\s/g) || []).length;
@@ -74,7 +74,7 @@ export default function TextFormatterPage() {
   // 格式化文本的核心函数
   const formatText = useCallback(() => {
     if (!inputText.trim()) {
-      message.warning('请输入需要格式化的文本');
+      message.warning("请输入需要格式化的文本");
       return;
     }
 
@@ -82,41 +82,41 @@ export default function TextFormatterPage() {
 
     // 移除换行符
     if (removeLineBreaks) {
-      formatted = formatted.replace(/\r?\n/g, '');
+      formatted = formatted.replace(/\r?\n/g, "");
     }
 
     // 移除词间空格
     if (removeSpaces) {
-      formatted = formatted.replace(/\s+/g, '');
+      formatted = formatted.replace(/\s+/g, "");
     } else if (removeExtraWhitespace) {
       // 如果不移除所有空格，至少移除多余的空白字符
-      formatted = formatted.replace(/\s+/g, ' ').trim();
+      formatted = formatted.replace(/\s+/g, " ").trim();
     }
 
     setOutputText(formatted);
     calculateStats(inputText, formatted);
-    message.success('文本格式化完成！');
+    message.success("文本格式化完成！");
   }, [inputText, removeSpaces, removeLineBreaks, removeExtraWhitespace, calculateStats, message]);
 
   // 复制结果
   const copyResult = useCallback(async () => {
     if (!outputText) {
-      message.warning('没有可复制的内容');
+      message.warning("没有可复制的内容");
       return;
     }
 
     try {
       await navigator.clipboard.writeText(outputText);
-      message.success('已复制到剪贴板！');
+      message.success("已复制到剪贴板！");
     } catch {
-      message.error('复制失败，请手动复制');
+      message.error("复制失败，请手动复制");
     }
   }, [outputText, message]);
 
   // 清空内容
   const clearAll = useCallback(() => {
-    setInputText('');
-    setOutputText('');
+    setInputText("");
+    setOutputText("");
     setStats({
       originalChars: 0,
       originalLines: 0,
@@ -130,20 +130,20 @@ export default function TextFormatterPage() {
   // 快速清理 - 一键移除所有格式
   const quickClean = useCallback(() => {
     if (!inputText.trim()) {
-      message.warning('请输入需要格式化的文本');
+      message.warning("请输入需要格式化的文本");
       return;
     }
 
     // 移除所有格式：换行、多余空格、制表符等
     const formatted = inputText
-      .replace(/\r?\n/g, '') // 移除换行
-      .replace(/\t/g, '')    // 移除制表符
-      .replace(/\s+/g, '')   // 移除所有空格
+      .replace(/\r?\n/g, "") // 移除换行
+      .replace(/\t/g, "")    // 移除制表符
+      .replace(/\s+/g, "")   // 移除所有空格
       .trim();               // 移除首尾空白
 
     setOutputText(formatted);
     calculateStats(inputText, formatted);
-    message.success('快速清理完成！');
+    message.success("快速清理完成！");
   }, [inputText, calculateStats, message]);
 
   // 处理输入变化
@@ -163,13 +163,13 @@ export default function TextFormatterPage() {
         }
       `}</style>
       
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px' }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "24px" }}>
         {/* 页面标题 */}
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
           <Title level={2} style={{ marginBottom: 8 }}>
             ✂️ 文字格式化工具
           </Title>
-          <Text type="secondary" style={{ fontSize: '16px' }}>
+          <Text type="secondary" style={{ fontSize: "16px" }}>
             去除复制文本的格式、空格和换行，还原纯净文字内容
           </Text>
         </div>
@@ -245,7 +245,7 @@ export default function TextFormatterPage() {
             </Col>
             
             <Col xs={24} sm={12}>
-              <Space wrap style={{ float: 'right' }}>
+              <Space wrap style={{ float: "right" }}>
                 <Button
                   icon={<ClearOutlined />}
                   onClick={clearAll}
@@ -275,7 +275,7 @@ export default function TextFormatterPage() {
                   title="格式化后字符数"
                   value={stats.formattedChars}
                   prefix={<CheckCircleOutlined />}
-                  valueStyle={{ color: '#52c41a' }}
+                  valueStyle={{ color: "#52c41a" }}
                 />
               </Col>
               <Col xs={12} sm={6}>
@@ -283,7 +283,7 @@ export default function TextFormatterPage() {
                   title="移除空格数"
                   value={stats.spacesRemoved}
                   prefix={<DeleteOutlined />}
-                  valueStyle={{ color: '#1890ff' }}
+                  valueStyle={{ color: "#1890ff" }}
                 />
               </Col>
               <Col xs={12} sm={6}>
@@ -291,7 +291,7 @@ export default function TextFormatterPage() {
                   title="移除换行数"
                   value={stats.lineBreaksRemoved}
                   prefix={<LineOutlined />}
-                  valueStyle={{ color: '#722ed1' }}
+                  valueStyle={{ color: "#722ed1" }}
                 />
               </Col>
             </Row>
@@ -315,8 +315,8 @@ export default function TextFormatterPage() {
                   )}
                 </Space>
               }
-              style={{ height: '100%' }}
-              styles={{ body: { padding: '16px' } }}
+              style={{ height: "100%" }}
+              styles={{ body: { padding: "16px" } }}
             >
               <TextArea
                 value={inputText}
@@ -324,9 +324,9 @@ export default function TextFormatterPage() {
                 placeholder="请粘贴需要格式化的文本...&#10;&#10;例如：从Word、PDF或网页复制的带有格式的文本"
                 style={{
                   minHeight: 400,
-                  fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
-                  fontSize: '14px',
-                  lineHeight: '1.6',
+                  fontFamily: "Monaco, Menlo, \"Ubuntu Mono\", monospace",
+                  fontSize: "14px",
+                  lineHeight: "1.6",
                 }}
                 autoSize={{ minRows: 20, maxRows: 30 }}
               />
@@ -358,8 +358,8 @@ export default function TextFormatterPage() {
                   )}
                 </Space>
               }
-              style={{ height: '100%' }}
-              styles={{ body: { padding: '16px' } }}
+              style={{ height: "100%" }}
+              styles={{ body: { padding: "16px" } }}
             >
               <TextArea
                 value={outputText}
@@ -367,10 +367,10 @@ export default function TextFormatterPage() {
                 placeholder="格式化后的纯文本将显示在这里..."
                 style={{
                   minHeight: 400,
-                  fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
-                  fontSize: '14px',
-                  lineHeight: '1.6',
-                  backgroundColor: '#fafafa',
+                  fontFamily: "Monaco, Menlo, \"Ubuntu Mono\", monospace",
+                  fontSize: "14px",
+                  lineHeight: "1.6",
+                  backgroundColor: "#fafafa",
                 }}
                 autoSize={{ minRows: 20, maxRows: 30 }}
               />

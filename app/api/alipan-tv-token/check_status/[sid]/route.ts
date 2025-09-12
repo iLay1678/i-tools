@@ -1,7 +1,7 @@
-import { decrypt, getParams } from '@/utils/decode'
+import { decrypt, getParams } from "@/utils/decode";
 
 interface QrCodeStatus {
-  status: 'WaitLogin' | 'LoginSuccess' | 'QRCodeExpired' | 'ScanSuccess' | 'LoginFailed'
+  status: "WaitLogin" | "LoginSuccess" | "QRCodeExpired" | "ScanSuccess" | "LoginFailed"
   authCode?: string
 }
 
@@ -23,67 +23,68 @@ interface TokenRequest {
   t: number
   wifiMac: string
   code?: string
-  'Content-Type': string
+  "Content-Type": string
 }
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ sid: string }> }
+  { params }: { params: Promise<{ sid: string }> },
 ) {
   try {
-    const { sid } = await params
+    const { sid } = await params;
     
-    const statusResponse = await fetch(`https://openapi.alipan.com/oauth/qrcode/${sid}/status`)
+    const statusResponse = await fetch(`https://openapi.alipan.com/oauth/qrcode/${sid}/status`);
     
     if (!statusResponse.ok) {
-      throw new Error('Failed to check status')
+      throw new Error("Failed to check status");
     }
     
-    const statusData: QrCodeStatus = await statusResponse.json()
+    const statusData: QrCodeStatus = await statusResponse.json();
     
-    if (statusData.status === 'LoginSuccess' && statusData.authCode) {
+    if (statusData.status === "LoginSuccess" && statusData.authCode) {
       try {
-        const t = Math.floor(Date.now() / 1000)
+        const t = Math.floor(Date.now() / 1000);
         const sendData: TokenRequest = { 
           ...getParams(t), 
           code: statusData.authCode, 
-          "Content-Type": "application/json" 
-        } as TokenRequest
+          "Content-Type": "application/json", 
+        } as TokenRequest;
 
         const headers = Object.fromEntries(
-          Object.entries(sendData).map(([k, v]) => [k, String(v)])
-        )
+          Object.entries(sendData).map(([k, v]) => [k, String(v)]),
+        );
 
-        const tokenResponse = await fetch('https://api.extscreen.com/aliyundrive/v3/token', {
-          method: 'POST',
+        const tokenResponse = await fetch("https://api.extscreen.com/aliyundrive/v3/token", {
+          method: "POST",
           headers: headers,
-          body: JSON.stringify(sendData)
-        })
+          body: JSON.stringify(sendData),
+        });
 
         if (!tokenResponse.ok) {
-          throw new Error('Failed to get token')
+          throw new Error("Failed to get token");
         }
 
-        const tokenResult: TokenResponseEncrypt = await tokenResponse.json()
-        const plainData = decrypt(tokenResult.data.ciphertext, tokenResult.data.iv, t)
-        const tokenInfo = JSON.parse(plainData)
+        const tokenResult: TokenResponseEncrypt = await tokenResponse.json();
+        const plainData = decrypt(tokenResult.data.ciphertext, tokenResult.data.iv, t);
+        const tokenInfo = JSON.parse(plainData);
 
         return Response.json({
-          status: 'LoginSuccess',
+          status: "LoginSuccess",
           refresh_token: tokenInfo.refresh_token,
-          access_token: tokenInfo.access_token
-        })
+          access_token: tokenInfo.access_token,
+        });
 
-      } catch (error) {
-        return Response.json({ status: 'LoginFailed' })
+      } catch {
+        return Response.json({ status: "LoginFailed" });
       }
     }
     
-    return Response.json(statusData)
-  } catch (error: any) {
+    return Response.json(statusData);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     return Response.json(
-      { error: error.message },
-      { status: 500 }
-    )
+      { error: message },
+      { status: 500 },
+    );
   }
 }

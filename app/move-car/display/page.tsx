@@ -1,45 +1,45 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { Card, Button, message, Space, Typography, Avatar, Flex, Tag, Descriptions } from 'antd'
-import { CarOutlined, PhoneOutlined, BellOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import Head from 'next/head'
+import { useState, useEffect } from "react";
+import { Card, Button, message, Space, Typography, Avatar, Flex, Tag, Descriptions } from "antd";
+import { CarOutlined, PhoneOutlined, BellOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import Head from "next/head";
 
-const { Text } = Typography
+const { Text } = Typography;
 
 export default function MoveCarDisplay() {
-  const [plateNumber, setPlateNumber] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [token, setToken] = useState('')
-  const [uid, setUid] = useState('')
-  const [newEnergy, setNewEnergy] = useState(false)
+  const [plateNumber, setPlateNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [token, setToken] = useState("");
+  const [uid, setUid] = useState("");
+  const [newEnergy, setNewEnergy] = useState(false);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    setPlateNumber(urlParams.get('plateNumber') || '')
-    setPhoneNumber(urlParams.get('phoneNumber') || '')
-    setToken(urlParams.get('token') || '')
-    setUid(urlParams.get('uid') || '')
-    setNewEnergy(urlParams.get('new') === 'true')
-  }, [])
+    const urlParams = new URLSearchParams(window.location.search);
+    setPlateNumber(urlParams.get("plateNumber") || "");
+    setPhoneNumber(urlParams.get("phoneNumber") || "");
+    setToken(urlParams.get("token") || "");
+    setUid(urlParams.get("uid") || "");
+    setNewEnergy(urlParams.get("new") === "true");
+  }, []);
 
   const notifyOwner = () => {
-    const currentTime = new Date().getTime()
-    const lastNotifyTimeKey = 'lastNotifyTime' + plateNumber
-    const lastNotifyTime = localStorage.getItem(lastNotifyTimeKey)
-    const timeDifference = lastNotifyTime ? (currentTime - parseInt(lastNotifyTime)) / 1000 : 0
+    const currentTime = new Date().getTime();
+    const lastNotifyTimeKey = "lastNotifyTime" + plateNumber;
+    const lastNotifyTime = localStorage.getItem(lastNotifyTimeKey);
+    const timeDifference = lastNotifyTime ? (currentTime - parseInt(lastNotifyTime)) / 1000 : 0;
 
     if (lastNotifyTime && timeDifference < 60) {
-      message.warning('您已发送过通知，请1分钟后再次尝试。')
-      return
+      message.warning("您已发送过通知，请1分钟后再次尝试。");
+      return;
     }
 
-    fetch('https://wxpusher.zjiecode.com/api/send/message', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    fetch("https://wxpusher.zjiecode.com/api/send/message", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         appToken: token,
-        content: '您好，有人需要您挪车，请及时处理。',
+        content: "您好，有人需要您挪车，请及时处理。",
         contentType: 1,
         uids: [uid],
       }),
@@ -47,20 +47,20 @@ export default function MoveCarDisplay() {
       .then((response) => response.json())
       .then((data) => {
         if (data.code === 1000) {
-          message.success('通知已发送！')
-          localStorage.setItem(lastNotifyTimeKey, currentTime.toString())
+          message.success("通知已发送！");
+          localStorage.setItem(lastNotifyTimeKey, currentTime.toString());
         } else {
-          message.error('通知发送失败，请稍后重试。')
+          message.error("通知发送失败，请稍后重试。");
         }
       })
       .catch((error) => {
-        console.error('Error sending notification:', error)
-        message.error('通知发送出错，请检查网络连接。')
-      })
-  }
+        console.error("Error sending notification:", error);
+        message.error("通知发送出错，请检查网络连接。");
+      });
+  };
   const callNumber = () => {
-    window.location.href = 'tel:' + phoneNumber
-  }
+    window.location.href = "tel:" + phoneNumber;
+  };
 
   return (
     <>
@@ -155,5 +155,5 @@ export default function MoveCarDisplay() {
         </Card>
       </div>
     </>
-  )
+  );
 }

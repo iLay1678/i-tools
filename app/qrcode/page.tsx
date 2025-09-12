@@ -25,7 +25,7 @@ import {
   SaveOutlined,
   RocketOutlined,
   BulbOutlined,
-  MobileOutlined
+  MobileOutlined,
 } from "@ant-design/icons";
 import Head from "next/head";
 
@@ -56,7 +56,7 @@ export default function QRCodeGenerator() {
     errorLevel: "M",
   });
 
-  const handleConfigChange = (field: keyof QRConfig, value: any) => {
+  const handleConfigChange = (field: keyof QRConfig, value: string | number | boolean) => {
     setConfig((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -64,7 +64,7 @@ export default function QRCodeGenerator() {
     // 等待一小段时间确保canvas完全渲染
     setTimeout(() => {
       const canvas = document.querySelector(
-        "#qr-code-container canvas"
+        "#qr-code-container canvas",
       ) as HTMLCanvasElement;
       if (canvas) {
         try {
@@ -86,7 +86,7 @@ export default function QRCodeGenerator() {
     // 等待更长时间确保canvas完全渲染
     setTimeout(() => {
       const canvas = document.querySelector(
-        "#qr-code-container canvas"
+        "#qr-code-container canvas",
       ) as HTMLCanvasElement;
       
       if (canvas) {
@@ -107,7 +107,7 @@ export default function QRCodeGenerator() {
             }
           },
           "image/png",
-          1.0
+          1.0,
         );
       } else {
         message?.error("未找到二维码");
@@ -189,7 +189,7 @@ export default function QRCodeGenerator() {
                             onChange={(e) =>
                               handleConfigChange(
                                 "size",
-                                parseInt(e.target.value) || 160
+                                parseInt(e.target.value) || 160,
                               )
                             }
                             addonAfter="px"
@@ -206,7 +206,7 @@ export default function QRCodeGenerator() {
                             onChange={(e) =>
                               handleConfigChange(
                                 "iconSize",
-                                parseInt(e.target.value) || 40
+                                parseInt(e.target.value) || 40,
                               )
                             }
                             addonAfter="px"

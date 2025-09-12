@@ -71,7 +71,7 @@ export default function RandomStringGenerator() {
   const [generatedStrings, setGeneratedStrings] = useState<string[]>([]);
   const [currentString, setCurrentString] = useState("");
 
-  const handleConfigChange = (field: keyof StringConfig, value: any) => {
+  const handleConfigChange = (field: keyof StringConfig, value: string | number | boolean) => {
     setConfig((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -88,7 +88,7 @@ export default function RandomStringGenerator() {
     }
 
     if (config.excludeSimilar && !config.customChars) {
-      chars = chars.split('').filter(char => !SIMILAR_CHARS.includes(char)).join('');
+      chars = chars.split("").filter(char => !SIMILAR_CHARS.includes(char)).join("");
     }
 
     return chars;
@@ -135,7 +135,7 @@ export default function RandomStringGenerator() {
   };
 
   const copyAllStrings = () => {
-    const allStrings = generatedStrings.join('\n');
+    const allStrings = generatedStrings.join("\n");
     copyToClipboard(allStrings);
   };
 
@@ -406,7 +406,7 @@ export default function RandomStringGenerator() {
                         />
                       ) : (
                         <TextArea
-                          value={generatedStrings.join('\n')}
+                          value={generatedStrings.join("\n")}
                           readOnly
                           rows={Math.min(generatedStrings.length, 10)}
                           style={{ fontFamily: "monospace" }}

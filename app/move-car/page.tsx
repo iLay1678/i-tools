@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 import { 
   Card, 
   Form, 
@@ -15,8 +15,8 @@ import {
   Space,
   Alert,
   Tooltip,
-  Flex
-} from 'antd'
+  Flex,
+} from "antd";
 import { 
   CarOutlined, 
   PhoneOutlined, 
@@ -27,11 +27,11 @@ import {
   CheckCircleOutlined,
   RocketOutlined,
   BulbOutlined,
-  MobileOutlined
-} from '@ant-design/icons'
-import Head from 'next/head'
+  MobileOutlined,
+} from "@ant-design/icons";
+import Head from "next/head";
 
-const { Title, Paragraph, Text, Link } = Typography
+const { Title, Paragraph, Text, Link } = Typography;
 
 interface FormData {
   plateNumber: string
@@ -42,27 +42,27 @@ interface FormData {
 }
 
 export default function MoveCar() {
-  const [form] = Form.useForm()
-  const [generatedUrl, setGeneratedUrl] = useState('')
+  const [form] = Form.useForm();
+  const [generatedUrl, setGeneratedUrl] = useState("");
 
   const handleSubmit = (values: FormData) => {
-    const url = new URL(window.location.href + '/display')
-    url.searchParams.append('plateNumber', values.plateNumber)
-    url.searchParams.append('phoneNumber', values.phoneNumber)
-    if (values.token) url.searchParams.append('token', values.token)
-    if (values.uid) url.searchParams.append('uid', values.uid)
-    if (values.newEnergy) url.searchParams.append('new', 'true')
-    setGeneratedUrl(url.toString())
-  }
+    const url = new URL(window.location.href + "/display");
+    url.searchParams.append("plateNumber", values.plateNumber);
+    url.searchParams.append("phoneNumber", values.phoneNumber);
+    if (values.token) url.searchParams.append("token", values.token);
+    if (values.uid) url.searchParams.append("uid", values.uid);
+    if (values.newEnergy) url.searchParams.append("new", "true");
+    setGeneratedUrl(url.toString());
+  };
 
   const handleSubmitFailed = () => {
-    message.warning('请填写完整信息')
-  }
+    message.warning("请填写完整信息");
+  };
 
   const copyUrl = () => {
-    navigator.clipboard.writeText(generatedUrl)
-    message.success('链接已复制到剪贴板')
-  }
+    navigator.clipboard.writeText(generatedUrl);
+    message.success("链接已复制到剪贴板");
+  };
   return (
     <>
       <Head>
@@ -105,14 +105,14 @@ export default function MoveCar() {
                 {/* 基本信息区域 */}
                 <Space direction="vertical" size="middle" style={{ width: "100%" }}>
                   <Typography.Title level={4}>
-                    <InfoCircleOutlined style={{ marginRight: 8, color: '#1677ff' }} />
+                    <InfoCircleOutlined style={{ marginRight: 8, color: "#1677ff" }} />
                     基本信息
                   </Typography.Title>
                   
                   <Form.Item
                     name="plateNumber"
                     label="车牌号"
-                    rules={[{ required: true, message: '请输入车牌号' }]}
+                    rules={[{ required: true, message: "请输入车牌号" }]}
                   >
                     <Input 
                       placeholder="如：京A12345" 
@@ -124,8 +124,8 @@ export default function MoveCar() {
                     name="phoneNumber"
                     label="联系电话"
                     rules={[
-                      { required: true, message: '请输入联系电话' },
-                      { pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号' }
+                      { required: true, message: "请输入联系电话" },
+                      { pattern: /^1[3-9]\d{9}$/, message: "请输入有效的手机号" },
                     ]}
                   >
                     <Input 
@@ -139,7 +139,7 @@ export default function MoveCar() {
                       <Space>
                         <span>🔋 新能源车辆</span>
                         <Tooltip title="勾选此项将在码牌上显示新能源标识">
-                          <InfoCircleOutlined style={{ color: '#8c8c8c' }} />
+                          <InfoCircleOutlined style={{ color: "#8c8c8c" }} />
                         </Tooltip>
                       </Space>
                     </Checkbox>
@@ -147,7 +147,7 @@ export default function MoveCar() {
 
                   {/* 微信推送设置 */}
                   <Typography.Title level={4}>
-                    <WechatOutlined style={{ marginRight: 8, color: '#1677ff' }} />
+                    <WechatOutlined style={{ marginRight: 8, color: "#1677ff" }} />
                     微信推送设置（可选）
                   </Typography.Title>
                   
@@ -223,7 +223,7 @@ export default function MoveCar() {
               title={
                 <Space>
                   <QrcodeOutlined />
-                  <span>{generatedUrl ? '生成成功' : '预览区域'}</span>
+                  <span>{generatedUrl ? "生成成功" : "预览区域"}</span>
                 </Space>
               }
             >
@@ -236,7 +236,7 @@ export default function MoveCar() {
                     showIcon
                   />
                   
-                  <Flex vertical align="center" gap="middle" style={{ background: '#f9f9f9', borderRadius: 8, padding: 24 }}>
+                  <Flex vertical align="center" gap="middle" style={{ background: "#f9f9f9", borderRadius: 8, padding: 24 }}>
                     <QRCode 
                       value={generatedUrl} 
                       size={200}
@@ -244,11 +244,11 @@ export default function MoveCar() {
                     <Typography.Text type="secondary">扫码查看码牌</Typography.Text>
                   </Flex>
                   
-                  <Space direction="vertical" style={{ width: '100%' }}>
+                  <Space direction="vertical" style={{ width: "100%" }}>
                     <Typography.Paragraph 
                       copyable={{ 
                         text: generatedUrl,
-                        tooltips: ['复制链接', '复制成功!']
+                        tooltips: ["复制链接", "复制成功!"],
                       }}
                     >
                       <Typography.Link 
@@ -274,7 +274,7 @@ export default function MoveCar() {
                   </Space>
                 </Space>
               ) : (
-                <Flex vertical align="center" justify="center" gap="middle" style={{ background: '#f5f5f5', borderRadius: 8, padding: 48, color: '#8c8c8c' }}>
+                <Flex vertical align="center" justify="center" gap="middle" style={{ background: "#f5f5f5", borderRadius: 8, padding: 48, color: "#8c8c8c" }}>
                   <QrcodeOutlined style={{ fontSize: 48, opacity: 0.3 }} />
                   <Typography.Text type="secondary">
                     填写完信息后，二维码将在这里显示
@@ -356,5 +356,5 @@ export default function MoveCar() {
         </Card>
       </Space>
     </>
-  )
+  );
 }
