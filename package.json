@@ -22,7 +22,7 @@
     "antd": "^5.25.3",
     "clipboard": "^2.0.11",
     "crypto-es": "^2.1.0",
-    "next": "^15.3.2",
+    "next": "^16.0.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -31,8 +31,8 @@
     "@types/node": "^20.17.52",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "^14.2.29",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.0.10",
     "sass": "^1.89.0",
     "typescript": "^5.8.3"
   }

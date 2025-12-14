@@ -29,3 +29,5 @@ logs
 .vercel
 .next
 .open-next
+.spec-workflow
+.claude
