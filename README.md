@@ -41,7 +41,9 @@
   <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare Workers" />
 </a>
 
+#### EdgeOne Pages 自动部署
 
+[![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https://github.com/iLay1678/i-tools)
 
 
 ### Docker部署
