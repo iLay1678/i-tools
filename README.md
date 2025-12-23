@@ -130,6 +130,10 @@ npm run build
   <a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages/create/deploy-to-workers&repository=https://github.com/iLay1678/i-tools" target="_blank">
     <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare Workers" height="32" />
   </a>
+  &nbsp;&nbsp;
+  <a href="https://edgeone.ai/pages/new?repository-url=https://github.com/iLay1678/i-tools" target="_blank">
+    <img src="https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg" alt="Deploy to EdgeOne Pages" height="32" />
+  </a>
 </div>
 
 ### Docker 部署
