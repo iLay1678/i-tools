@@ -9,13 +9,13 @@ interface TokenResponseEncrypt {
 
 async function refreshToken(refreshTokenValue: string) {
   const t = Math.floor(Date.now() / 1000)
-  
-  const sendData = { 
-    ...getParams(t), 
+
+  const sendData = {
+    ...getParams(t),
     refresh_token: refreshTokenValue,
-    "Content-Type": "application/json" 
+    "Content-Type": "application/json"
   }
-  
+
   const headers = Object.fromEntries(
     Object.entries(sendData).map(([k, v]) => [k, String(v)])
   )
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
       refresh_token: tokenInfo.refresh_token,
       expires_in: tokenInfo.expires_in
     })
-    
+
   } catch (error: any) {
     return Response.json(
       {
@@ -65,8 +65,8 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const refresh_ui = searchParams.get('refresh_ui')
-    const server_use = searchParams.get('server_use')
-    const driver_txt = searchParams.get('driver_txt')
+
+
 
     if (!refresh_ui) {
       return Response.json({
@@ -83,7 +83,7 @@ export async function GET(request: Request) {
       access_token: tokenInfo.access_token,
       text: ''
     })
-    
+
   } catch (error: any) {
     return Response.json({
       refresh_token: '',

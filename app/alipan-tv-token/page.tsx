@@ -1,38 +1,35 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { 
-  Input, 
-  Modal, 
-  Button, 
-  message, 
-  Card, 
-  Typography, 
-  Space, 
-  Row, 
-  Col,
-  Flex,
-  Spin,
-  Alert,
-  App
-} from "antd";
 import {
-  CopyOutlined,
-  LoadingOutlined,
-  LoginOutlined,
-  ApiOutlined,
-  SettingOutlined,
-  BulbOutlined,
-  BookOutlined
-} from "@ant-design/icons";
-import ClipboardJS from "clipboard";
-import Head from "next/head";
+  CloudDownload,
+  Copy,
+  LogIn,
+  Loader2,
+  Info,
+  ExternalLink,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
-const { TextArea } = Input;
-const { Title, Paragraph } = Typography;
+interface StatusResponse {
+  status: "LoginSuccess" | "ScanSuccess" | "LoginFailed" | "QRCodeExpired" | "WaitLogin";
+  access_token: string;
+  refresh_token: string;
+}
 
 export default function AlipanTvToken() {
-  const { message } = App.useApp();
   const [hasGenerated, setHasGenerated] = useState(false);
   const [authUrl, setAuthUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -47,13 +44,13 @@ export default function AlipanTvToken() {
 
   const checkTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // 获取当前主机地址
   const getCurrentHost = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       return `${window.location.protocol}//${window.location.host}`;
     }
-    return '';
+    return "";
   };
+
   async function generateAuthUrl() {
     try {
       setIsLoading(true);
@@ -63,6 +60,8 @@ export default function AlipanTvToken() {
       const data = await response.json();
       setCurrentSid(data.sid);
       setAuthUrl(`https://www.alipan.com/o/oauth/authorize?sid=${data.sid}`);
+    } catch {
+      toast.error("初始化失败，请检查网络");
     } finally {
       setIsLoading(false);
     }
@@ -73,80 +72,57 @@ export default function AlipanTvToken() {
   }
 
   async function checkStatus(sid: string) {
-    console.log("Checking status for SID:", sid);
-
     try {
       const response = await fetch(`/api/alipan-tv-token/check_status/${sid}`);
-      const data = await response.json();
+      const data: StatusResponse = await response.json();
       if (data.status === "LoginSuccess") {
         setAccessToken(data.access_token);
         setRefreshToken(data.refresh_token);
-        const authSection = document.getElementById("authSection");
-        if (authSection) {
-          authSection.style.visibility = "hidden";
-        }
         setHasAccessToken(!!data.access_token);
         setHasRefreshToken(!!data.refresh_token);
         setAuthorizing(false);
-        message.success("登录成功");
-        initializeClipboard();
+        toast.success("登录成功");
       } else if (data.status === "ScanSuccess") {
         checkTimer.current = setTimeout(() => checkStatus(sid), 2000);
       } else if (data.status === "LoginFailed") {
         setAuthorizing(false);
-        message.error("登录失败，请刷新页面重试");
+        toast.error("登录失败，请刷新页面重试");
       } else if (data.status === "QRCodeExpired") {
         setAuthorizing(false);
-        message.error("链接过期，请刷新页面重试");
+        toast.error("链接过期，请刷新页面重试");
       } else {
+        // WaitLogin
         checkTimer.current = setTimeout(() => checkStatus(sid), 2000);
       }
     } catch (error) {
       console.error("检查状态时出错：", error);
-      message.error("发生错误，请稍后重试");
+      toast.error("发生错误，请稍后重试");
     }
   }
 
-  function initializeClipboard() {
-    const accessTokenClipboard = new ClipboardJS(
-      '[data-clipboard-target="#accessToken"]'
-    );
-    accessTokenClipboard.on("success", () => {
-      message.success("已复制访问令牌");
-    });
-    accessTokenClipboard.on("error", () => {
-      message.error("复制失败");
-    });
+  const copyToClipboard = async (text: string, name: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(`${name} 已复制`);
+    } catch {
+      toast.error("复制失败");
+    }
+  };
 
-    const refreshTokenClipboard = new ClipboardJS(
-      '[data-clipboard-target="#refreshToken"]'
-    );
-    refreshTokenClipboard.on("success", () => {
-      message.success("已复制刷新令牌");
-    });
-    refreshTokenClipboard.on("error", () => {
-      message.error("复制失败");
-    });
-  }
   const handleAuth = (url: string) => {
     setAuthorizing(true);
     window.open(url, "_blank");
 
-    // 重新启动状态检查
     if (currentSid) {
-      // 清除之前的定时器
       if (checkTimer.current) {
         clearTimeout(checkTimer.current);
       }
-      // 延迟一秒后开始检查状态，给用户一些时间进行授权
       checkTimer.current = setTimeout(() => checkStatus(currentSid), 1000);
     }
   };
 
   useEffect(() => {
-    // 设置当前主机地址
     setCurrentHost(getCurrentHost());
-    
     setIsNoticeOpen(true);
     if (!hasGenerated) {
       generateAuthUrl();
@@ -158,202 +134,205 @@ export default function AlipanTvToken() {
         clearTimeout(checkTimer.current);
       }
     };
-  }, [hasGenerated]);  return (
-    <>
-      <Head>
-        <title>阿里云盘TV授权 - 爱拓工具箱</title>
-      </Head>
-      
-      <Space direction="vertical" size="large" style={{ width: "100%" }}>
-        {/* 页面标题 */}
-        <Card>
-          <Flex vertical align="center" gap="small">
-            <Typography.Title level={1} className="gradient-text" style={{ margin: 0 }}>
-              🎬 阿里云盘TV授权
-            </Typography.Title>
-            <Typography.Text type="secondary" style={{ fontSize: 16, textAlign: "center" }}>
-              获取阿里云盘TV端的授权令牌，解锁高速下载
-            </Typography.Text>
-          </Flex>
-        </Card>
+  }, [hasGenerated]);
 
-        {/* 主功能区域 */}
-        <Row gutter={[24, 24]}>
-          <Col xs={24} lg={12}>
-            <Space direction="vertical" size="large" style={{ width: "100%" }}>
-              {/* 访问令牌 */}
-              <Card 
-                title={
-                  <Space>
-                    <CopyOutlined />
-                    <span>访问令牌</span>
-                  </Space>
-                } 
-                size="small"
-                extra={
-                  <Button
-                    data-clipboard-target="#accessToken"
-                    type="text"
-                    icon={<CopyOutlined />}
-                    disabled={!hasAccessToken}
-                    size="small"
-                  />
-                }
+  return (
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* Page Header */}
+      <div className="flex items-center space-x-4 border-b pb-4">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-teal-500 to-teal-600 shadow-lg">
+          <CloudDownload className="h-6 w-6 text-white" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">阿里云盘TV Token</h1>
+          <p className="text-muted-foreground">
+            获取阿里云盘TV端的授权令牌，解锁高速下载
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Left: Tokens */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-base font-medium">访问令牌</CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 gap-1"
+                disabled={!hasAccessToken}
+                onClick={() => copyToClipboard(accessToken, "访问令牌")}
               >
-                <Input.TextArea
-                  id="accessToken"
-                  value={accessToken}
-                  readOnly
-                  rows={4}
-                  placeholder="授权成功后，访问令牌将显示在这里..."
-                />
-              </Card>
+                <Copy className="h-3 w-3" />
+                复制
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                value={accessToken}
+                readOnly
+                rows={4}
+                placeholder="授权成功后，访问令牌将显示在这里..."
+                className="font-mono resize-none bg-muted/50 text-xs"
+              />
+            </CardContent>
+          </Card>
 
-              {/* 刷新令牌 */}
-              <Card 
-                title={
-                  <Space>
-                    <span>🔄</span>
-                    <span>刷新令牌</span>
-                  </Space>
-                } 
-                size="small"
-                extra={
-                  <Button
-                    data-clipboard-target="#refreshToken"
-                    type="text"
-                    icon={<CopyOutlined />}
-                    disabled={!hasRefreshToken}
-                    size="small"
-                  />
-                }
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-base font-medium">刷新令牌</CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 gap-1"
+                disabled={!hasRefreshToken}
+                onClick={() => copyToClipboard(refreshToken, "刷新令牌")}
               >
-                <Input.TextArea
-                  id="refreshToken"
-                  value={refreshToken}
-                  readOnly
-                  rows={3}
-                  placeholder="刷新令牌将显示在这里..."
-                />
-              </Card>
-            </Space>
-          </Col>
+                <Copy className="h-3 w-3" />
+                复制
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                value={refreshToken}
+                readOnly
+                rows={3}
+                placeholder="刷新令牌将显示在这里..."
+                className="font-mono resize-none bg-muted/50 text-xs"
+              />
+            </CardContent>
+          </Card>
+        </div>
 
-          <Col xs={24} lg={12}>
-            {/* 授权操作 */}
-            <Card 
-              title={
-                <Space>
-                  <LoginOutlined />
-                  <span>授权操作</span>
-                </Space>
-              }
-            >
-              <div id="authSection">
-                {isLoading ? (
-                  <Flex vertical align="center" gap="middle">
-                    <Spin size="large" />
-                    <Typography.Text type="secondary">
-                      正在获取授权链接...
-                    </Typography.Text>
-                  </Flex>
-                ) : (
-                  <Button
-                    type="primary"
-                    size="large"
-                    block
-                    onClick={() => handleAuth(authUrl)}
-                    disabled={authorizing}
-                    icon={authorizing ? <LoadingOutlined /> : <LoginOutlined />}
-                  >
-                    {authorizing ? "授权中..." : "开始授权登录"}
-                  </Button>
-                )}
+        {/* Right: Auth Action */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <LogIn className="h-4 w-4" />
+                授权操作
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {!hasAccessToken && !hasRefreshToken && (
+                 <div className="py-8">
+                     {isLoading ? (
+                        <div className="flex flex-col items-center gap-4 text-muted-foreground">
+                            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                            <p>正在获取授权链接...</p>
+                        </div>
+                     ) : (
+                        <Button
+                            size="lg"
+                            className="w-full gap-2 text-lg h-14"
+                            onClick={() => handleAuth(authUrl)}
+                            disabled={authorizing}
+                        >
+                            {authorizing ? (
+                                <>
+                                    <Loader2 className="h-5 w-5 animate-spin" />
+                                    授权中...
+                                </>
+                            ) : (
+                                <>
+                                    <LogIn className="h-5 w-5" />
+                                    开始授权登录
+                                </>
+                            )}
+                        </Button>
+                     )}
+                 </div>
+              )}
+               {(hasAccessToken || hasRefreshToken) && (
+                   <div className="py-8 flex flex-col items-center gap-4 text-emerald-600 dark:text-emerald-400">
+                       <div className="h-16 w-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                           <CloudDownload className="h-8 w-8" />
+                       </div>
+                       <p className="font-medium">已成功获取令牌</p>
+                   </div>
+               )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base font-medium">API 路由</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <span className="text-sm font-medium">OAuth 令牌链接：</span>
+              <div className="p-3 bg-muted rounded-md break-all text-xs font-mono">
+                {currentHost}/api/oauth/alipan/token
               </div>
-            </Card>
-          </Col>
-        </Row>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
-        {/* 使用说明 */}
-        <Card 
-          title={
-            <Space>
-              <BookOutlined />
-              <span>使用说明</span>
-            </Space>
-          }
-        >
-          <Space direction="vertical" size="large" style={{ width: "100%" }}>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} md={12}>
-                <Card 
-                  title={
-                    <Space>
-                      <ApiOutlined />
-                      <span>API路由</span>
-                    </Space>
-                  } 
-                  size="small"
-                >
-                 <Typography.Paragraph>
-                      <Typography.Text strong>Oauth令牌链接：</Typography.Text>
-                      <br />
-                      <Typography.Text code>
-                        {currentHost}/api/oauth/alipan/token
-                      </Typography.Text>
-                    </Typography.Paragraph>
-                </Card>
-              </Col>
+       {/* Info Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <span className="text-xl">💡</span> 使用说明
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+               <h4 className="font-medium text-sm">功能说明</h4>
+               <ul className="list-disc pl-4 text-sm text-muted-foreground space-y-1">
+                <li>本工具帮助获取阿里云盘TV版的刷新令牌</li>
+                <li>TV接口可绕过三方应用权益包的速率限制</li>
+                <li>需要SVIP会员才能享受高速下载</li>
+               </ul>
+            </div>
+            <div className="space-y-2">
+               <h4 className="font-medium text-sm">使用步骤</h4>
+               <ul className="list-disc pl-4 text-sm text-muted-foreground space-y-1">
+                 <li>点击"开始授权登录"按钮</li>
+                <li>在弹出的页面中使用阿里云盘APP扫码</li>
+                <li>授权成功后令牌会自动显示</li>
+                <li>复制令牌到对应的播放软件中使用</li>
+               </ul>
+            </div>
+          </div>
+          <Alert className="bg-amber-50 dark:bg-amber-950/20 text-amber-900 dark:text-amber-200 border-amber-200 dark:border-amber-800">
+             <Info className="h-4 w-4" />
+             <AlertTitle>温馨提示</AlertTitle>
+             <AlertDescription>
+               TV接口能绕过三方应用权益包的速率限制，但需要SVIP会员才能享受高速下载。
+             </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
 
-
-              <Col xs={24} md={12}>
-                <Card 
-                  title={
-                    <Space>
-                      <BulbOutlined />
-                      <span>温馨提示</span>
-                    </Space>
-                  } 
-                  size="small"
-                >
-                  <Alert
-                    message="TV接口能绕过三方应用权益包的速率限制，但需要SVIP会员才能享受高速下载。"
-                    type="warning"
-                    showIcon
-                  />
-                </Card>
-              </Col>
-            </Row>
-          </Space>
-        </Card>
-      </Space>
-
-      <Modal
-        open={isNoticeOpen}
-        title="使用说明"
-        onOk={closeNotice}
-        maskClosable={false}
-        closable={false}
-        keyboard={false}
-        footer={[
-          <Button
-            key="member"
-            type="primary"
-            danger
-            href="https://www.alipan.com/cpx/member?userCode=MjAyNTk2"
-            target="_blank"
-          >
-            开通会员
-          </Button>,
-          <Button key="ok" type="primary" onClick={closeNotice}>
-            我知道了
-          </Button>,
-        ]}
-      >
-        <Typography.Paragraph>
-          本工具能帮助你一键获取「阿里云盘TV版」的刷新令牌，完全免费。TV接口能绕过三方应用权益包的速率限制，但前提你得是SVIP。
-        </Typography.Paragraph>
-      </Modal>
-    </>
+      <Dialog open={isNoticeOpen} onOpenChange={setIsNoticeOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>使用说明</DialogTitle>
+          </DialogHeader>
+          <DialogDescription className="py-4">
+             本工具能帮助你一键获取「阿里云盘TV版」的刷新令牌，完全免费。
+             <br /><br />
+             <strong>注意：</strong> TV接口能绕过三方应用权益包的速率限制，但前提你得是SVIP。
+          </DialogDescription>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+             <Button
+              variant="outline"
+              className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+              asChild
+            >
+              <a href="https://www.alipan.com/cpx/member?userCode=MjAyNTk2" target="_blank" rel="noopener noreferrer">
+                 <ExternalLink className="h-4 w-4" />
+                 开通会员
+              </a>
+            </Button>
+            <Button onClick={closeNotice}>
+              我知道了
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }

@@ -1,34 +1,53 @@
 "use client";
 
-import {
-  Card,
-  Row,
-  Col,
-  Typography,
-  Tag,
-  Space,
-  Button,
-  Avatar,
-  Badge,
-  Flex,
-} from "antd";
-import {
-  QrcodeOutlined,
-  CloudDownloadOutlined,
-  CarOutlined,
-  RightOutlined,
-  CodeOutlined,
-  CloudOutlined,
-  CustomerServiceOutlined,
-  ToolOutlined,
-  AppstoreOutlined,
-  ThunderboltOutlined,
-  ScissorOutlined,
-} from "@ant-design/icons";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { useState } from "react";
+import {
+  Code,
+  Zap,
+  Clock,
+  Lock,
+  Link as LinkIcon,
+  Hash,
+  Scissors,
+  QrCode,
+  FileText,
+  Car,
+  CloudDownload,
+  Search,
+  LayoutGrid,
+  Diff,
+  FileJson,
+  FileCode,
+  Database,
+  Braces,
+  Type,
+  Binary,
+  Languages,
+  ImageIcon,
+  Calculator,
+  FileSpreadsheet,
+  ImagePlus,
+  Network,
+  Barcode,
+  Terminal,
+  FerrisWheel,
+  CircleDollarSign,
+  Palette,
+  Timer,
+  Monitor,
+  Keyboard,
+  Volume2,
+  Users,
+  Tally5,
+  Hourglass,
+  Watch,
+  KeySquare,
+  ShieldAlert,
+  CaseSensitive,
+} from "lucide-react";
 
-const { Title, Text } = Typography;
+// --- Data Definitions ---
 
 interface Tool {
   id: string;
@@ -36,424 +55,596 @@ interface Tool {
   description: string;
   icon: React.ReactNode;
   href: string;
-  status: "available" | "coming-soon";
-  category: string;
-  tags: string[];
   color: string;
+  isPlanned?: boolean;
 }
 
-const tools: Tool[] = [
+interface Category {
+  id: string;
+  name: string;
+  icon: React.ReactNode;
+  tools: Tool[];
+}
+
+const categories: Category[] = [
   {
-    id: "text-formatter",
-    title: "文字格式化工具",
-    description:
-      "快速清理复制文本的格式、空格和换行符，去除多余的格式信息，还原纯净的文字内容，适用于处理从Word、PDF或网页复制的文本",
-    icon: <ScissorOutlined />,
-    href: "/text-formatter",
-    status: "available",
-    category: "encoding",
-    tags: ["文字格式化", "去格式", "文本清理", "去空格"],
-    color: "#eb2f96",
+    id: "dev-tools",
+    name: "开发工具",
+    icon: <Code className="h-4 w-4" />,
+    tools: [
+      {
+        id: "json-formatter",
+        title: "JSON 格式化",
+        description: "JSON 数据格式化、压缩和验证",
+        icon: <Code className="h-6 w-6" />,
+        href: "/json-formatter",
+        color: "text-blue-500",
+      },
+      {
+        id: "diff",
+        title: "文本 Diff 对比",
+        description: "使用 Monaco 显示文本差异",
+        icon: <Diff className="h-6 w-6" />,
+        href: "/diff",
+        color: "text-slate-500",
+      },
+      {
+        id: "yaml-formatter",
+        title: "YAML 格式化",
+        description: "YAML 数据格式化和验证",
+        icon: <FileJson className="h-6 w-6" />,
+        href: "/yaml-formatter",
+        color: "text-amber-600",
+      },
+      {
+        id: "html-formatter",
+        title: "HTML 格式化",
+        description: "HTML 代码格式化和美化",
+        icon: <FileCode className="h-6 w-6" />,
+        href: "/html-formatter",
+        color: "text-orange-600",
+      },
+      {
+        id: "markdown",
+        title: "Markdown 编辑",
+        description: "Markdown 实时预览和导出",
+        icon: <FileText className="h-6 w-6" />,
+        href: "/markdown",
+        color: "text-blue-600",
+      },
+      {
+        id: "sql-formatter",
+        title: "SQL 格式化",
+        description: "SQL 语句格式化和美化",
+        icon: <Database className="h-6 w-6" />,
+        href: "/sql-formatter",
+        color: "text-indigo-600",
+      },
+      {
+        id: "html-escape",
+        title: "HTML 转义",
+        description: "HTML 实体编码/解码",
+        icon: <Braces className="h-6 w-6" />,
+        href: "/html-escape",
+        color: "text-emerald-600",
+      },
+    ],
   },
   {
-    id: "random-string",
-    title: "随机字符串生成器",
-    description:
-      "生成安全可靠的随机字符串，支持多种字符集配置、批量生成和强度评估，适用于密码生成、API密钥创建等场景",
-    icon: <ThunderboltOutlined />,
-    href: "/random-string",
-    status: "available",
-    category: "encoding",
-    tags: ["随机字符串", "密码生成", "安全"],
-    color: "#722ed1",
+    id: "text-tools",
+    name: "文本工具",
+    icon: <Scissors className="h-4 w-4" />,
+    tools: [
+      {
+        id: "text-formatter",
+        title: "文字格式化",
+        description: "清理文本中的多余空格和格式",
+        icon: <Scissors className="h-6 w-6" />,
+        href: "/text-formatter",
+        color: "text-pink-500",
+      },
+      {
+        id: "case-converter",
+        title: "大小写转换",
+        description: "大写、小写、驼峰等格式转换",
+        icon: <CaseSensitive className="h-6 w-6" />,
+        href: "/case-converter",
+        color: "text-violet-500",
+      },
+      {
+        id: "lorem-ipsum",
+        title: "Lorem Ipsum",
+        description: "占位文本生成工具",
+        icon: <Type className="h-6 w-6" />,
+        href: "/lorem-ipsum",
+        color: "text-zinc-500",
+      },
+    ],
   },
   {
-    id: "qrcode",
-    title: "二维码生成器",
-    description:
-      "快速生成各种类型的二维码，支持文本、链接、WiFi等多种格式，提供高清下载和自定义样式",
-    icon: <QrcodeOutlined />,
-    href: "/qrcode",
-    status: "available",
-    category: "encoding",
-    tags: ["二维码", "QR Code", "生成器"],
-    color: "#10b981",
+    id: "encoding-tools",
+    name: "编码工具",
+    icon: <Binary className="h-4 w-4" />,
+    tools: [
+      {
+        id: "base64",
+        title: "Base64 编解码",
+        description: "Base64 编码与解码转换工具",
+        icon: <Lock className="h-6 w-6" />,
+        href: "/base64",
+        color: "text-emerald-500",
+      },
+      {
+        id: "base58",
+        title: "Base58 编解码",
+        description: "常用于比特币地址等场景",
+        icon: <Binary className="h-6 w-6" />,
+        href: "/base58",
+        color: "text-amber-500",
+      },
+      {
+        id: "base32",
+        title: "Base32 编解码",
+        description: "常用于 TOTP 等场景",
+        icon: <Binary className="h-6 w-6" />,
+        href: "/base32",
+        color: "text-orange-500",
+      },
+      {
+        id: "unicode",
+        title: "Unicode 转换",
+        description: "Unicode 字符与编码相互转换",
+        icon: <Languages className="h-6 w-6" />,
+        href: "/unicode",
+        color: "text-blue-500",
+      },
+      {
+        id: "url-encode",
+        title: "URL 编解码",
+        description: "URL 参数编码与解码处理",
+        icon: <LinkIcon className="h-6 w-6" />,
+        href: "/url-encode",
+        color: "text-cyan-500",
+      },
+    ],
   },
   {
-    id: "json-formatter",
-    title: "JSON格式化工具",
-    description:
-      "强大的JSON格式化和压缩工具，支持JSON美化、压缩、验证和语法高亮，让JSON数据处理更简单",
-    icon: <CodeOutlined />,
-    href: "/json-formatter",
-    status: "available",
-    category: "encoding",
-    tags: ["JSON", "格式化", "压缩", "验证"],
-    color: "#8b5cf6",
+    id: "conversion-tools",
+    name: "转换工具",
+    icon: <Clock className="h-4 w-4" />,
+    tools: [
+      {
+        id: "timestamp",
+        title: "时间戳转换",
+        description: "时间戳与日期时间互相转换",
+        icon: <Clock className="h-6 w-6" />,
+        href: "/timestamp",
+        color: "text-orange-500",
+      },
+      {
+        id: "image-to-pixel",
+        title: "图片转像素画",
+        description: "将图片转换为像素艺术风格",
+        icon: <ImageIcon className="h-6 w-6" />,
+        href: "/image-to-pixel",
+        color: "text-pink-600",
+      },
+      {
+        id: "radix-converter",
+        title: "进制转换器",
+        description: "二/八/十/十六进制互转",
+        icon: <Calculator className="h-6 w-6" />,
+        href: "/radix-converter",
+        color: "text-indigo-500",
+      },
+      {
+        id: "csv-json",
+        title: "CSV/JSON 互转",
+        description: "CSV 与 JSON 格式互相转换",
+        icon: <FileSpreadsheet className="h-6 w-6" />,
+        href: "/csv-json",
+        color: "text-green-600",
+      },
+      {
+        id: "image-base64",
+        title: "图片 Base64",
+        description: "图片与 Base64 字符串互转",
+        icon: <ImagePlus className="h-6 w-6" />,
+        href: "/image-base64",
+        color: "text-purple-600",
+      },
+      {
+        id: "ip-radix",
+        title: "IP 地址转换",
+        description: "IP 在不同进制间相互转换",
+        icon: <Network className="h-6 w-6" />,
+        href: "/ip-radix",
+        color: "text-cyan-600",
+      },
+    ],
   },
   {
-    id: "alipan-tv-token",
-    title: "阿里云盘TV Token",
-    description:
-      "获取阿里云盘TV版授权Token，轻松在电视端使用阿里云盘，支持扫码登录和Token管理",
-    icon: <CloudDownloadOutlined />,
-    href: "/alipan-tv-token",
-    status: "available",
-    category: "storage",
-    tags: ["阿里云盘", "TV版", "Token"],
-    color: "#14b8a6",
+    id: "generation-tools",
+    name: "生成工具",
+    icon: <QrCode className="h-4 w-4" />,
+    tools: [
+      {
+        id: "uuid",
+        title: "UUID 生成",
+        description: "生成 UUID/GUID 唯一标识符",
+        icon: <FileText className="h-6 w-6" />,
+        href: "/uuid",
+        color: "text-indigo-500",
+      },
+      {
+        id: "random-string",
+        title: "随机密码生成",
+        description: "生成安全的随机密码",
+        icon: <Zap className="h-6 w-6" />,
+        href: "/random-string",
+        color: "text-purple-500",
+      },
+      {
+        id: "qrcode",
+        title: "二维码生成",
+        description: "快速生成自定义样式的二维码",
+        icon: <QrCode className="h-6 w-6" />,
+        href: "/qrcode",
+        color: "text-green-500",
+      },
+      {
+        id: "barcode",
+        title: "条形码生成",
+        description: "生成各种格式的条形码",
+        icon: <Barcode className="h-6 w-6" />,
+        href: "/barcode",
+        color: "text-zinc-700",
+      },
+      {
+        id: "ascii-art",
+        title: "ASCII 艺术",
+        description: "将文本转换为字符艺术",
+        icon: <Terminal className="h-6 w-6" />,
+        href: "/ascii-art",
+        color: "text-emerald-700",
+      },
+      {
+        id: "wheel",
+        title: "大转盘抽奖",
+        description: "随机抽奖决策工具",
+        icon: <FerrisWheel className="h-6 w-6" />,
+        href: "/wheel",
+        color: "text-rose-500",
+      },
+      {
+        id: "coin-flip",
+        title: "抛硬币",
+        description: "随机正反面决策",
+        icon: <CircleDollarSign className="h-6 w-6" />,
+        href: "/coin-flip",
+        color: "text-amber-600",
+      },
+    ],
   },
   {
-    id: "move-car",
-    title: "挪车码牌生成器",
-    description:
-      "生成专属挪车码牌，支持微信小程序推送通知，让挪车变得更加便捷高效",
-    icon: <CarOutlined />,
-    href: "/move-car",
-    status: "available",
-    category: "lifestyle",
-    tags: ["挪车", "码牌", "微信推送"],
-    color: "#f59e0b",
+    id: "utility-tools",
+    name: "实用工具",
+    icon: <LayoutGrid className="h-4 w-4" />,
+    tools: [
+      {
+        id: "color-picker",
+        title: "颜色选择器",
+        description: "HEX/RGB/HSL 格式互转",
+        icon: <Palette className="h-6 w-6" />,
+        href: "/color-picker",
+        color: "text-pink-500",
+      },
+      {
+        id: "regex",
+        title: "正则测试器",
+        description: "测试和调试正则表达式",
+        icon: <Code className="h-6 w-6" />,
+        href: "/regex",
+        color: "text-blue-600",
+      },
+      {
+        id: "cron",
+        title: "Cron 解析器",
+        description: "解析和验证 Cron 表达式",
+        icon: <Timer className="h-6 w-6" />,
+        href: "/cron",
+        color: "text-orange-600",
+      },
+      {
+        id: "user-agent",
+        title: "UA 解析器",
+        description: "解析浏览器 UA 字符串",
+        icon: <Monitor className="h-6 w-6" />,
+        href: "/user-agent",
+        color: "text-slate-600",
+      },
+      {
+        id: "keyboard",
+        title: "键盘检测器",
+        description: "检测键盘按键事件详情",
+        icon: <Keyboard className="h-6 w-6" />,
+        href: "/keyboard",
+        color: "text-zinc-600",
+      },
+      {
+        id: "tts",
+        title: "文字转语音",
+        description: "将文本转换为语音播放",
+        icon: <Volume2 className="h-6 w-6" />,
+        href: "/tts",
+        color: "text-cyan-600",
+      },
+      {
+        id: "random-group",
+        title: "随机分组",
+        description: "快速公平地生成随机团队",
+        icon: <Users className="h-6 w-6" />,
+        href: "/random-group",
+        color: "text-indigo-600",
+      },
+      {
+        id: "scoreboard",
+        title: "记分板",
+        description: "红蓝双方比分记录",
+        icon: <Tally5 className="h-6 w-6" />,
+        href: "/scoreboard",
+        color: "text-rose-600",
+      },
+      {
+        id: "pomodoro",
+        title: "番茄钟",
+        description: "番茄工作法计时器",
+        icon: <Timer className="h-6 w-6" />,
+        href: "/pomodoro",
+        color: "text-red-500",
+      },
+      {
+        id: "counter",
+        title: "计数器",
+        description: "简单的计数工具",
+        icon: <Hash className="h-6 w-6" />,
+        href: "/counter",
+        color: "text-zinc-500",
+      },
+      {
+        id: "countdown",
+        title: "倒数计时器",
+        description: "设置倒计时到时提醒",
+        icon: <Hourglass className="h-6 w-6" />,
+        href: "/countdown",
+        color: "text-amber-500",
+      },
+      {
+        id: "stopwatch",
+        title: "秒表",
+        description: "精确计时支持记圈",
+        icon: <Watch className="h-6 w-6" />,
+        href: "/stopwatch",
+        color: "text-blue-500",
+      },
+      {
+        id: "ip-calc",
+        title: "IP 地址计算",
+        description: "子网掩码与网络划分计算",
+        icon: <Network className="h-6 w-6" />,
+        href: "/ip-calc",
+        color: "text-blue-600",
+      },
+    ],
+  },
+  {
+    id: "crypto-tools",
+    name: "加密工具",
+    icon: <Lock className="h-4 w-4" />,
+    tools: [
+      {
+        id: "hash",
+        title: "MD5/SHA 哈希",
+        description: "计算 MD5、SHA1/256/512 哈希",
+        icon: <Hash className="h-6 w-6" />,
+        href: "/hash",
+        color: "text-rose-500",
+      },
+      {
+        id: "jwt",
+        title: "JWT 解码器",
+        description: "解析和查看 JWT 内容",
+        icon: <KeySquare className="h-6 w-6" />,
+        href: "/jwt",
+        color: "text-purple-600",
+      },
+      {
+        id: "aes-des",
+        title: "AES/DES 加密",
+        description: "对称加密解密工具",
+        icon: <ShieldAlert className="h-6 w-6" />,
+        href: "/aes-des",
+        color: "text-red-600",
+      },
+      {
+        id: "bcrypt",
+        title: "Bcrypt 哈希",
+        description: "生成和验证 Bcrypt 密码",
+        icon: <Lock className="h-6 w-6" />,
+        href: "/bcrypt",
+        color: "text-slate-700",
+      },
+    ],
+  },
+  {
+    id: "life-tools",
+    name: "生活工具",
+    icon: <Car className="h-4 w-4" />,
+    tools: [
+      {
+        id: "move-car",
+        title: "挪车码牌",
+        description: "生成专属挪车码牌，支持微信推送",
+        icon: <Car className="h-6 w-6" />,
+        href: "/move-car",
+        color: "text-yellow-500",
+      },
+      {
+        id: "alipan-tv-token",
+        title: "阿里云盘 Token",
+        description: "获取阿里云盘 TV 端授权令牌",
+        icon: <CloudDownload className="h-6 w-6" />,
+        href: "/alipan-tv-token",
+        color: "text-teal-500",
+      },
+    ],
   },
 ];
 
-// 分类配置
-const categoryConfig: Record<
-  string,
-  { icon: React.ReactNode; color: string; description: string; name: string }
-> = {
-  encoding: {
-    icon: <CodeOutlined />,
-    color: "#10b981",
-    description: "编码解码相关的实用工具",
-    name: "编码工具",
-  },
-  storage: {
-    icon: <CloudOutlined />,
-    color: "#14b8a6",
-    description: "云存储平台相关工具",
-    name: "云存储",
-  },
-  lifestyle: {
-    icon: <CustomerServiceOutlined />,
-    color: "#f59e0b",
-    description: "日常生活便民服务工具",
-    name: "生活服务",
-  },
-};
+// --- Main Layout Component ---
 
 export default function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("all");
 
-  // 筛选工具
-  const filteredTools = selectedCategory 
-    ? tools.filter(tool => tool.category === selectedCategory)
-    : tools;
+  // Flatten tools for easier filtering
+  const allTools = useMemo(() => {
+    return categories.flatMap((cat) =>
+      cat.tools.map((tool) => ({ ...tool, categoryId: cat.id }))
+    );
+  }, []);
 
-  // 获取所有分类
-  const categories = Array.from(new Set(tools.map(tool => tool.category)));
+  // Filter Logic
+  const filteredTools = useMemo(() => {
+    let tools = allTools;
+
+    // 1. Category Filter
+    if (activeCategory !== "all") {
+      tools = tools.filter((tool) => tool.categoryId === activeCategory);
+    }
+
+    // 2. Search Filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      tools = tools.filter(
+        (tool) =>
+          tool.title.toLowerCase().includes(query) ||
+          tool.description.toLowerCase().includes(query)
+      );
+    }
+
+    return tools;
+  }, [allTools, activeCategory, searchQuery]);
 
   return (
-    <div className="homepage-container" style={{ maxWidth: 1200, margin: '0 auto', padding: '24px' }}>
-      {/* 顶部标题区域 */}
-      <div style={{ textAlign: "center", marginBottom: 48 }}>
-        <Title
-          level={1}
-          className="gradient-text"
-          style={{ 
-            fontSize: "2.5em", 
-            marginBottom: 16,
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text"
-          }}
-        >
-          🛠️ 爱拓工具箱
-        </Title>
-        <Text 
-          style={{ 
-            fontSize: "18px", 
-            color: "#6b7280",
-            display: "block",
-            marginBottom: 24 
-          }}
-        >
-          精心收集和开发的实用在线工具集合，让您的工作和生活更加便捷高效
-        </Text>
-        {/* <Tag 
-          color="blue" 
-          style={{ 
-            fontSize: "14px", 
-            padding: "6px 16px",
-            borderRadius: "20px",
-            border: "none"
-          }}
-        >
-          {tools.length} 个精选工具
-        </Tag> */}
-      </div>
-
-      {/* 分类筛选 */}
-      <div style={{ textAlign: "center", marginBottom: 32 }}>
-        <Title level={4} style={{ marginBottom: 16, color: "#374151" }}>
-          🏷️ 按分类筛选
-        </Title>
-        <Space wrap size="middle">
-          <Tag
-            color={selectedCategory === null ? "blue" : "default"}
-            style={{
-              cursor: "pointer",
-              fontSize: "14px",
-              padding: "6px 16px",
-              borderRadius: "20px",
-              border: selectedCategory === null ? "2px solid #1890ff" : "1px solid #d9d9d9",
-              fontWeight: selectedCategory === null ? 600 : 400,
-            }}
-            onClick={() => setSelectedCategory(null)}
-          >
-            <AppstoreOutlined style={{ marginRight: 4 }} />
-            全部工具
-          </Tag>
-          {categories.map((category) => (
-            <Tag
-              key={category}
-              color={selectedCategory === category ? "blue" : "default"}
-              style={{
-                cursor: "pointer",
-                fontSize: "14px",
-                padding: "6px 16px",
-                borderRadius: "20px",
-                border: selectedCategory === category ? "2px solid #1890ff" : "1px solid #d9d9d9",
-                fontWeight: selectedCategory === category ? 600 : 400,
-              }}
-              onClick={() => setSelectedCategory(category)}
-            >
-              {categoryConfig[category]?.icon && (
-                <span style={{ marginRight: 4 }}>
-                  {categoryConfig[category].icon}
-                </span>
-              )}
-              {categoryConfig[category]?.name || category}
-            </Tag>
-          ))}
-        </Space>
-        <div style={{ marginTop: 12 }}>
-          <Text type="secondary" style={{ fontSize: "13px" }}>
-            当前显示 {filteredTools.length} 个工具
-            {selectedCategory && ` · ${categoryConfig[selectedCategory]?.name || selectedCategory}`}
-          </Text>
+    <div className="flex flex-col space-y-6 pb-10">
+      {/* Hero Section */}
+      <section className="flex flex-col items-center pt-8 pb-4 text-center space-y-4 md:pt-12 lg:pt-16 animate-in fade-in slide-in-from-bottom-5 duration-700">
+        <div className="space-y-2 max-w-3xl px-4">
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl text-foreground">
+            爱拓工具箱
+          </h1>
+          <p className="mx-auto max-w-175 text-muted-foreground text-base sm:text-lg">
+            简约、高效的在线开发者工具集合。让繁琐的数据处理变得简单。
+          </p>
         </div>
-      </div>
 
-      {/* 工具展示区域 */}
-      <div className="tools-section">
-        <Row gutter={[24, 24]} justify="start">
-          {filteredTools.map((tool) => (
-            <Col key={tool.id} xs={24} sm={12} lg={8} xl={6}>
-              <Link href={tool.href} style={{ textDecoration: "none" }}>
-                <Card
-                  hoverable={tool.status === "available"}
-                  style={{
-                    height: "300px",
-                    borderRadius: 12,
-                    border: "1px solid #f0f0f0",
-                    transition: "all 0.3s ease",
-                    position: "relative",
-                    overflow: "hidden"
-                  }}
-                  styles={{ 
-                    body: {
-                      padding: "24px",
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column"
-                    }
-                  }}
-                >
-                  {/* 工具头部 */}
-                  <div style={{ marginBottom: 16 }}>
-                    <Flex align="center" gap="large" style={{ marginBottom: 12 }}>
-                      <Avatar
-                        size={44}
-                        icon={tool.icon}
-                        style={{
-                          backgroundColor: tool.color,
-                          fontSize: "20px",
-                        }}
-                      />
-                      <div style={{ flex: 1 }}>
-                        <Title
-                          level={5}
-                          style={{ 
-                            margin: 0, 
-                            fontSize: "16px",
-                            fontWeight: 600,
-                            lineHeight: 1.3
-                          }}
-                        >
+        {/* Search Input */}
+        <div className="w-full max-w-lg px-4 relative mt-2">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="搜索工具，例如：JSON、二维码..."
+              className="w-full h-12 pl-12 pr-4 rounded-full border border-input bg-background/50 hover:bg-accent/50 focus:bg-background transition-all ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 shadow-xs text-base"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content Area */}
+      <div className="container max-w-6xl mx-auto px-4 space-y-8">
+        {/* Category Navigation */}
+        <div className="flex flex-wrap items-center justify-center gap-2 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+          <button
+            onClick={() => setActiveCategory("all")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              activeCategory === "all"
+                ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+                : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <LayoutGrid className="h-4 w-4" />
+            全部
+          </button>
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                activeCategory === cat.id
+                  ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+                  : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {cat.icon}
+              {cat.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Tools Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+          {filteredTools.length > 0 ? (
+            filteredTools.map((tool) => (
+              <Link 
+                key={tool.id} 
+                href={tool.isPlanned ? "#" : tool.href} 
+                className={`group block h-full ${tool.isPlanned ? "cursor-not-allowed" : ""}`}
+                onClick={(e) => tool.isPlanned && e.preventDefault()}
+              >
+                <div className={`relative h-full overflow-hidden rounded-xl border bg-card text-card-foreground transition-all duration-300 ${!tool.isPlanned && "hover:shadow-md hover:-translate-y-1 hover:border-primary/20 group-hover:bg-accent/5"}`}>
+                  <div className="p-5 flex items-center gap-4 text-left h-full">
+                    <div
+                      className={`relative shrink-0 flex h-12 w-12 items-center justify-center rounded-xl ${tool.color} transition-transform duration-300 ${!tool.isPlanned && "group-hover:scale-110 group-hover:rotate-3"}`}
+                    >
+                       <div className="absolute inset-0 bg-current opacity-10 rounded-xl" />
+                       {tool.icon}
+                    </div>
+                    <div className="space-y-1 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold tracking-tight text-base">
                           {tool.title}
-                        </Title>
+                        </h3>
+                        {tool.isPlanned && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
+                            敬请期待
+                          </span>
+                        )}
                       </div>
-                    </Flex>
-                    
-                    {/* 分类标签 */}
-                    <div style={{ marginBottom: 8 }}>
-                      <Tag
-                        style={{
-                          borderRadius: 8,
-                          fontSize: "11px",
-                          border: "none",
-                          backgroundColor: `${tool.color}15`,
-                          color: tool.color,
-                          margin: 0
-                        }}
-                      >
-                        {categoryConfig[tool.category]?.name || tool.category}
-                      </Tag>
-                      {tool.status === "coming-soon" && (
-                        <Tag color="orange" style={{ marginLeft: 6, fontSize: "11px" }}>
-                          敬请期待
-                        </Tag>
-                      )}
+                      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                        {tool.description}
+                      </p>
                     </div>
                   </div>
-
-                  {/* 工具描述 */}
-                  <div style={{ height: "78px", marginBottom: 16, overflow: "hidden" }}>
-                    <Text
-                      style={{ 
-                        fontSize: "13px", 
-                        lineHeight: "1.5",
-                        color: "#666",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden"
-                      }}
-                    >
-                      {tool.description}
-                    </Text>
-                  </div>
-
-                  {/* 标签 */}
-                  <div style={{ height: "28px", marginBottom: 16, overflow: "hidden" }}>
-                    <Space wrap size="small">
-                      {tool.tags.slice(0, 3).map((tag) => (
-                        <Tag
-                          key={tag}
-                          style={{
-                            borderRadius: 6,
-                            fontSize: "10px",
-                            border: "none",
-                            backgroundColor: "#f5f5f5",
-                            color: "#666",
-                            margin: 0,
-                            padding: "2px 6px"
-                          }}
-                        >
-                          {tag}
-                        </Tag>
-                      ))}
-                    </Space>
-                  </div>
-
-                  {/* 统一的操作按钮 */}
-                  <div style={{ marginTop: "auto" }}>
-                    <Button
-                      type={tool.status === "available" ? "primary" : "default"}
-                      block
-                      size="middle"
-                      icon={tool.status === "available" ? <RightOutlined /> : null}
-                      disabled={tool.status === "coming-soon"}
-                      style={{
-                        borderRadius: 8,
-                        height: 42,
-                        background: tool.status === "available" ? tool.color : "#f5f5f5",
-                        borderColor: tool.status === "available" ? tool.color : "#d9d9d9",
-                        color: tool.status === "available" ? "#fff" : "#999",
-                        fontWeight: 500,
-                        fontSize: "14px"
-                      }}
-                    >
-                      {tool.status === "available" ? "立即使用" : "敬请期待"}
-                    </Button>
-                  </div>
-                </Card>
+                </div>
               </Link>
-            </Col>
-          ))}
-        </Row>
-
-        {/* 无结果提示 */}
-        {filteredTools.length === 0 && (
-          <div style={{ textAlign: "center", padding: "48px 0" }}>
-            <Text type="secondary" style={{ fontSize: "16px" }}>
-              暂无该分类下的工具
-            </Text>
-          </div>
-        )}
+            ))
+          ) : (
+            <div className="col-span-full py-16 text-center">
+              <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4">
+                <Search className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold">未找到相关工具</h3>
+              <p className="text-muted-foreground mt-2">
+                换个关键词试试，或者浏览其他分类。
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-
-      {/* 分类说明 */}
-      <div style={{ marginTop: 48, marginBottom: 32 }}>
-        <Title level={4} style={{ textAlign: "center", marginBottom: 24 }}>
-          📋 工具分类介绍
-        </Title>
-        <Row gutter={[16, 16]} justify="center">
-          {Object.entries(categoryConfig).map(([category, config]) => (
-            <Col key={category} xs={24} sm={8}>
-              <Card
-                hoverable
-                onClick={() => setSelectedCategory(category)}
-                style={{
-                  textAlign: "center",
-                  borderRadius: 8,
-                  border: `1px solid ${config.color}20`,
-                  backgroundColor: `${config.color}08`,
-                  cursor: "pointer",
-                  transition: "all 0.3s ease"
-                }}
-              >
-                <Avatar
-                  size={32}
-                  icon={config.icon}
-                  style={{
-                    backgroundColor: config.color,
-                    marginBottom: 8
-                  }}
-                />
-                <Title level={5} style={{ margin: 0, fontSize: "14px" }}>
-                  {categoryConfig[category]?.name || category}
-                </Title>
-                <Text style={{ fontSize: "12px", color: "#666" }}>
-                  {config.description}
-                </Text>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </div>
-
-      {/* 底部说明 */}
-      <Card
-        style={{
-          marginTop: 32,
-          borderRadius: 12,
-          background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-          border: "1px solid #e2e8f0",
-          textAlign: "center"
-        }}
-        styles={{ body: { padding: "32px" } }}
-      >
-        <Title level={4} style={{ color: "#4b5563", marginBottom: 12 }}>
-          💡 更多工具正在开发中
-        </Title>
-        <Text style={{ color: "#6b7280", fontSize: "14px" }}>
-          我们持续为您带来更多实用工具，让您的工作和生活更加便捷。
-          如果您有好的建议或需求，欢迎联系我们。
-        </Text>
-      </Card>
     </div>
   );
 }

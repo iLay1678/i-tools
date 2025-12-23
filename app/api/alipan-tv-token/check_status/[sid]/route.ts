@@ -32,22 +32,22 @@ export async function GET(
 ) {
   try {
     const { sid } = await params
-    
+
     const statusResponse = await fetch(`https://openapi.alipan.com/oauth/qrcode/${sid}/status`)
-    
+
     if (!statusResponse.ok) {
       throw new Error('Failed to check status')
     }
-    
+
     const statusData: QrCodeStatus = await statusResponse.json()
-    
+
     if (statusData.status === 'LoginSuccess' && statusData.authCode) {
       try {
         const t = Math.floor(Date.now() / 1000)
-        const sendData: TokenRequest = { 
-          ...getParams(t), 
-          code: statusData.authCode, 
-          "Content-Type": "application/json" 
+        const sendData: TokenRequest = {
+          ...getParams(t),
+          code: statusData.authCode,
+          "Content-Type": "application/json"
         } as TokenRequest
 
         const headers = Object.fromEntries(
@@ -74,11 +74,11 @@ export async function GET(
           access_token: tokenInfo.access_token
         })
 
-      } catch (error) {
+      } catch {
         return Response.json({ status: 'LoginFailed' })
       }
     }
-    
+
     return Response.json(statusData)
   } catch (error: any) {
     return Response.json(
