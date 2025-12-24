@@ -121,7 +121,7 @@ export default function Base64Page() {
                 {mode === "encode" ? "原始文本" : "Base64 字符串"}
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 min-h-[300px]">
+            <CardContent className="flex-1 min-h-75">
               <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -130,7 +130,7 @@ export default function Base64Page() {
                     ? "请输入要编码的文本..."
                     : "请输入要解码的 Base64 字符串..."
                 }
-                className="h-full min-h-[300px] font-mono resize-none"
+                className="h-full min-h-75 font-mono resize-none"
               />
             </CardContent>
           </Card>
@@ -152,12 +152,12 @@ export default function Base64Page() {
                 复制
               </Button>
             </CardHeader>
-            <CardContent className="flex-1 min-h-[300px]">
+            <CardContent className="flex-1 min-h-75">
               <Textarea
                 value={output}
                 readOnly
                 placeholder="转换结果将显示在这里..."
-                className="h-full min-h-[300px] font-mono resize-none bg-muted/50"
+                className="h-full min-h-75 font-mono resize-none bg-muted/50"
               />
             </CardContent>
           </Card>

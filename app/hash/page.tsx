@@ -274,7 +274,7 @@ export default function HashPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="请输入要计算哈希值的文本..."
-                className="h-full min-h-[300px] resize-none font-mono"
+                className="h-full min-h-75 resize-none font-mono"
               />
             </CardContent>
           </Card>
@@ -297,7 +297,7 @@ export default function HashPage() {
                   <HashResultItem label="SHA512 (128位)" value={results.sha512} />
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-muted-foreground">
+                <div className="flex flex-col items-center justify-center h-full min-h-75 text-muted-foreground">
                   <FileDigit className="h-16 w-16 mb-4 opacity-20" />
                   <p>输入文本后点击计算哈希</p>
                 </div>

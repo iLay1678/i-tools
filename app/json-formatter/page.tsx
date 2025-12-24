@@ -148,7 +148,7 @@ export default function JsonFormatterPage() {
             <p className="text-muted-foreground">格式化JSON，使其更易读</p>
           </div>
         </div>
-        <Tabs value={mode} onValueChange={(v) => setMode(v as Mode)} className="w-[300px]">
+        <Tabs value={mode} onValueChange={(v) => setMode(v as Mode)} className="w-75">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="format">格式化</TabsTrigger>
             <TabsTrigger value="compress">压缩</TabsTrigger>

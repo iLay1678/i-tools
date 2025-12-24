@@ -103,7 +103,7 @@ export default function DiffPage() {
       </div>
 
       {/* Main Editor Area */}
-      <Card className="flex-1 min-h-150 flex flex-col overflow-hidden">
+      <Card className="flex-1 h-150 flex flex-col overflow-hidden">
         <CardHeader className="py-3 px-4 border-b bg-muted/30 flex flex-row items-center justify-between">
            <div className="flex items-center gap-8">
                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
@@ -125,7 +125,7 @@ export default function DiffPage() {
                </Button>
            </div>
         </CardHeader>
-        <CardContent className="p-0 flex-1 h-150 relative">
+        <CardContent className="p-0 flex-1 relative h-full">
           <DiffEditor
             height="100%"
             language={language}

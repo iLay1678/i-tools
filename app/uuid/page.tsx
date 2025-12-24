@@ -115,7 +115,7 @@ export default function UuidPage() {
               value={format}
               onValueChange={(value: any) => setFormat(value)}
             >
-              <SelectTrigger className="w-[140px]">
+              <SelectTrigger className="w-35">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -171,7 +171,7 @@ export default function UuidPage() {
                 </div>
               ))
             ) : (
-              <div className="flex min-h-[200px] flex-col items-center justify-center text-muted-foreground">
+              <div className="flex min-h-50 flex-col items-center justify-center text-muted-foreground">
                 <FileText className="mb-4 h-12 w-12 opacity-20" />
                 <p>点击生成按钮创建 UUID</p>
               </div>

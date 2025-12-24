@@ -92,7 +92,7 @@ export default function QRCodeGenerator() {
                   onChange={(e) => setText(e.target.value)}
                   placeholder="请输入要生成二维码的文本内容，如：网址、文本、微信号等..."
                   maxLength={2953}
-                  className="min-h-[100px]"
+                  className="min-h-25"
                 />
               </div>
             </CardContent>
@@ -239,7 +239,7 @@ export default function QRCodeGenerator() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col items-center justify-center min-h-[320px] bg-muted/30 rounded-lg p-8 border border-dashed">
+              <div className="flex flex-col items-center justify-center min-h-80 bg-muted/30 rounded-lg p-8 border border-dashed">
                 {text ? (
                   <div className="flex flex-col items-center gap-4">
                     <div className="bg-white p-4 rounded-lg shadow-sm">

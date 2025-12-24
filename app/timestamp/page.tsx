@@ -115,7 +115,7 @@ export default function TimestampPage() {
           <Tabs
             value={unit}
             onValueChange={(v) => handleUnitChange(v as "seconds" | "milliseconds")}
-            className="w-[180px]"
+            className="w-45"
           >
             <TabsList className="grid w-full grid-cols-2 h-8">
               <TabsTrigger value="seconds" className="text-xs">秒(s)</TabsTrigger>

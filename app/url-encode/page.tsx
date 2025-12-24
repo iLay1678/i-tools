@@ -93,7 +93,7 @@ export default function UrlEncodePage() {
           <Tabs
             value={mode}
             onValueChange={(v) => setMode(v as "encode" | "decode")}
-            className="w-[200px]"
+            className="w-50"
           >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="encode">编码</TabsTrigger>
@@ -131,7 +131,7 @@ export default function UrlEncodePage() {
                   ? "请输入要编码的文本，如：你好 世界"
                   : "请输入要解码的 URL 编码字符串，如：%E4%BD%A0%E5%A5%BD"
               }
-              className="min-h-[300px] font-mono text-sm resize-none"
+              className="min-h-75 font-mono text-sm resize-none"
             />
           </CardContent>
         </Card>
@@ -156,7 +156,7 @@ export default function UrlEncodePage() {
               value={output}
               readOnly
               placeholder="转换结果将显示在这里..."
-              className="min-h-[300px] font-mono text-sm bg-muted/50 resize-none"
+              className="min-h-75 font-mono text-sm bg-muted/50 resize-none"
             />
           </CardContent>
         </Card>

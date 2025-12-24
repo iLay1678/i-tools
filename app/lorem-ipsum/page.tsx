@@ -97,7 +97,7 @@ export default function LoremIpsumPage() {
              </Button>
           </CardHeader>
           <CardContent>
-             <div className="min-h-[300px] p-4 rounded-md bg-muted/30 whitespace-pre-wrap font-serif text-lg leading-relaxed text-muted-foreground">
+             <div className="min-h-75 p-4 rounded-md bg-muted/30 whitespace-pre-wrap font-serif text-lg leading-relaxed text-muted-foreground">
                 {generated}
              </div>
           </CardContent>
