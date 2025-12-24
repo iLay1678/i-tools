@@ -269,7 +269,7 @@ export default function HashPage() {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="flex-1 min-h-[400px]">
+            <CardContent className="flex-1 min-h-100">
                <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
