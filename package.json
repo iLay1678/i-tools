@@ -49,7 +49,7 @@
     "js-beautify": "^1.15.4",
     "js-yaml": "^4.1.1",
     "lucide-react": "^0.562.0",
-    "next": "^16.0.10",
+    "next": "^16.1.6",
     "next-themes": "^0.4.6",
     "postcss": "^8.5.6",
     "qrcode.react": "^4.2.0",
