@@ -2,4 +2,20 @@ include:
   - https://cnb.cool/ilay1678/templates/-/blob/main/ci/docker.cnb.yml
   - https://cnb.cool/ilay1678/templates/-/blob/main/ci/docker.ghcr.yml
   - https://cnb.cool/ilay1678/templates/-/blob/main/ci/sync_to_github.yml
-  - https://cnb.cool/ilay1678/templates/-/blob/main/ci/ide.node.yml
+$:
+  vscode:
+    - docker:
+        # 指定开发环境镜像，可以是任意可访问的镜像
+        image: docker.cnb.cool/ilay1678/envbuild/dev-env:latest-linux-amd64
+      services:
+        - vscode
+        - docker
+      stages:
+        - name: 软链 .config
+          # ./ 是工作目录，默认为 /workspace
+          script: |
+            if [ -e "/root/.cnb/.config" ]; then
+                ln -sf /root/.cnb/.config ~/.config
+            else
+                echo "文件不存在"
+            fi
