@@ -17,5 +17,10 @@ $:
             if [ -e "/root/.cnb/.config" ]; then
                 ln -sf /root/.cnb/.config ~/.config
             else
-                echo "文件不存在"
+                echo ".config不存在"
+            fi
+            if [ -e "/root/.cnb/.agents" ]; then
+                ln -sf /root/.cnb/.agents ~/.agents
+            else
+                echo ".agent不存在"
             fi
