@@ -6,7 +6,7 @@ $:
   vscode:
     - docker:
         # 指定开发环境镜像，可以是任意可访问的镜像
-        image: docker.cnb.cool/ilay1678/envbuild/dev-env:latest-linux-amd64
+        image: docker.cnb.cool/ilay1678/envbuild/dev-env:latest
       services:
         - vscode
         - docker
