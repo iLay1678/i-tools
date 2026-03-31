@@ -15,6 +15,9 @@ $:
           # ./ 是工作目录，默认为 /workspace
           script: |
             if [ -e "/root/.cnb/.config" ]; then
+                if [ -e ~/.config ] && [ ! -L ~/.config ]; then
+                  rm -rf ~/.config
+                fi
                 ln -sf /root/.cnb/.config ~/.config
             else
                 echo ".config不存在"
@@ -23,4 +26,9 @@ $:
                 ln -sf /root/.cnb/.agents ~/.agents
             else
                 echo ".agent不存在"
+            fi
+            if [ -e "/.cnb/.minimax-skills/skills/" ]; then
+                ln -s ~/.cnb/.minimax-skills/skills/* ~/.agents/skills/
+            else
+                echo ".minimax-skills不存在"
             fi
