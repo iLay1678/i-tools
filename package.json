@@ -1,6 +1,6 @@
 {
   "name": "i-tools",
-  "version": "1.0.9",
+  "version": "1.0.12",
   "description": "爱拓工具箱",
   "author": "iLay1678",
   "keywords": [
@@ -31,6 +31,7 @@
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@scalar/nextjs-api-reference": "^0.10.6",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/bcryptjs": "^2.4.6",
     "@types/crypto-js": "^4.2.2",
@@ -49,14 +50,16 @@
     "js-beautify": "^1.15.4",
     "js-yaml": "^4.1.1",
     "lucide-react": "^0.562.0",
+    "mermaid": "^11.14.0",
     "next": "^16.2.1",
     "next-themes": "^0.4.6",
     "postcss": "^8.5.6",
+    "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
-    "react": "^18.3.1",
+    "react": "^19.2.4",
     "react-barcode": "^1.6.1",
     "react-day-picker": "^9.13.0",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.2.4",
     "react-hook-form": "^7.69.0",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
@@ -70,8 +73,9 @@
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.18.0",
     "@types/node": "^20.17.52",
-    "@types/react": "^18.3.23",
-    "@types/react-dom": "^18.3.7",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "oxlint": "^1.35.0",
     "typescript": "^5.8.3"
   },
@@ -79,6 +83,7 @@
     "dompurify": "3.3.2",
     "minimatch": "10.2.5",
     "glob": "13.0.6",
-    "editorconfig": "3.0.2"
+    "editorconfig": "3.0.2",
+    "formdata-node": "6.0.3"
   }
 }

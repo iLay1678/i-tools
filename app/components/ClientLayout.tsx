@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { Github, Home } from 'lucide-react'
+import { FileText, Github, Home } from 'lucide-react'
 
 export default function ClientLayout({
   children,
@@ -42,6 +42,15 @@ export default function ClientLayout({
                 </div>
                 <span>GitHub</span>
               </Link>
+              <Link
+                href="/docs"
+                className="transition-colors hover:text-primary text-foreground/80 flex items-center gap-2 group"
+              >
+                <div className="p-1 rounded-md group-hover:bg-accent">
+                  <FileText className="h-4 w-4" />
+                </div>
+                <span>API 文档</span>
+              </Link>
             </nav>
           </div>
         </div>
@@ -56,7 +65,10 @@ export default function ClientLayout({
       <footer className="py-6 border-t bg-muted/30">
         <div className="container max-w-screen-xl mx-auto px-4 flex flex-col items-center justify-center gap-4">
           <p className="text-balance text-center text-sm leading-loose text-muted-foreground">
-            版权所有 © {new Date().getFullYear()} 爱拓工具箱
+            版权所有 © {new Date().getFullYear()} 爱拓工具箱 · Power by 
+            <Link href="https://www.ilay.top/" target="_blank" rel="noreferrer" className="ml-1 underline underline-offset-4 hover:text-foreground">
+              iLay
+            </Link>
           </p>
         </div>
       </footer>

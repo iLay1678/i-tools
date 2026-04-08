@@ -1,5 +1,7 @@
 import { decrypt, getParams } from '@/utils/decode'
 
+export const runtime = 'edge'
+
 interface QrCodeStatus {
   status: 'WaitLogin' | 'LoginSuccess' | 'QRCodeExpired' | 'ScanSuccess' | 'LoginFailed'
   authCode?: string

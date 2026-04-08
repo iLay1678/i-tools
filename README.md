@@ -13,12 +13,22 @@
   基于 Next.js 16 + Tailwind CSS 4 + TypeScript 构建
 </p>
 
+<p align="center">当前版本：v1.0.12</p>
+
+## 📝 更新日志
+
+### v1.0.12 
+
+- 新增 `PNG 转 SVG`、`SVG 在线编辑`、`Mermaid 在线编辑` 等工具。
+- 新增在线接口
+
+
 ## ✨ 特性
 
-- **现代化设计**：精美的 UI，支持明亮/暗黑模式自适应。
+- **现代化设计**：精美的 UI
 - **高性能**：基于 React Server Components 和静态生成。
 - **纯前端处理**：大部分数据处理（如格式化、转换）在本地浏览器完成，保护隐私。
-- **全能工具库**：涵盖开发、文本、编码、加密、转换、生成、生活等 40+ 款实用工具。
+- **全能工具库**：涵盖开发、文本、编码、加密、转换、生成、生活等 45+ 款实用工具。
 
 ## 🛠️ 工具列表
 
@@ -28,8 +38,11 @@
 3.  **HTML 格式化** (`/html-formatter`): HTML 代码美化。
 4.  **SQL 格式化** (`/sql-formatter`): 支持多种数据库方言的 SQL 美化。
 5.  **文本 Diff 对比** (`/diff`): Monaco Editor 驱动并排代码差异对比。
-6.  **Markdown 编辑器** (`/markdown`): 实时预览、GFM 支持、导出 Markdown。
-7.  **HTML 转义** (`/html-escape`): HTML 实体编码/解码。
+6.  **Markdown 在线编辑** (`/markdown`): 实时预览、GFM 支持、导出 Markdown。
+7.  **SVG 在线编辑** (`/svg-editor`): 在线编辑 SVG 源码并实时预览。
+8.  **PNG 转 SVG** (`/png-to-svg`): 将 PNG 包装为保留透明背景的 SVG。
+9.  **Mermaid 在线编辑** (`/mermaid`): 在线编辑 Mermaid 图表并实时生成 SVG 预览。
+10.  **HTML 转义** (`/html-escape`): HTML 实体编码/解码。
 
 ### 📝 文本工具 (Text Tools)
 1.  **文字格式化** (`/text-formatter`): 中英文盘古之白空格、符号修正。
@@ -63,9 +76,12 @@
 ### 🎲 生成与随机 (Generation)
 1.  **UUID 生成** (`/uuid`): 批量生成 Version 1/4 UUID。
 2.  **随机密码生成** (`/random-string`): 高强度随机密码生成器。
-3.  **大转盘抽奖** (`/wheel`): 随机决策工具。
+
+### 🧭 决策工具 (Decision)
+1.  **大转盘抽奖** (`/wheel`): 支持权重、去重的随机决策工具。
+2.  **抛硬币** (`/coin-flip`): 支持连续抛掷的概率工具。
+3.  **掷圣杯** (`/holy-cup`): 掷筊问事，支持连续问卦与结果解释。
 4.  **随机分组** (`/random-group`): 名单随机分组工具。
-5.  **抛硬币** (`/coin-flip`): 简单的概率工具。
 
 ### 🔧 实用工具 (Utilities)
 1.  **Cron 解析** (`/cron`): Cron 表达式翻译与执行时间预测。
@@ -120,19 +136,20 @@ npm run build
 
 ### Vercel / Cloudflare / EdgeOne
 
-推荐使用 Vercel 或 Cloudflare Pages 进行一键部署。
+推荐使用 EdgeOne 进行一键部署。
 
 <div align="left">
-  <a href="https://vercel.com/new/clone?repository-url=https://github.com/iLay1678/i-tools" target="_blank">
-    <img src="https://vercel.com/button" alt="Deploy with Vercel" height="32" />
+  
+  <a href="https://edgeone.ai/pages/new?repository-url=https://github.com/iLay1678/i-tools" target="_blank">
+    <img src="https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg" alt="Deploy to EdgeOne Pages" height="32" />
   </a>
   &nbsp;&nbsp;
   <a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages/create/deploy-to-workers&repository=https://github.com/iLay1678/i-tools" target="_blank">
     <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare Workers" height="32" />
   </a>
   &nbsp;&nbsp;
-  <a href="https://edgeone.ai/pages/new?repository-url=https://github.com/iLay1678/i-tools" target="_blank">
-    <img src="https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg" alt="Deploy to EdgeOne Pages" height="32" />
+  <a href="https://vercel.com/new/clone?repository-url=https://github.com/iLay1678/i-tools" target="_blank">
+    <img src="https://vercel.com/button" alt="Deploy with Vercel" height="32" />
   </a>
 </div>
 

@@ -128,23 +128,25 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+    background-image: radial-gradient(rgb(229 231 235 / 0.55) 1px, transparent 1px);
     background-size: 24px 24px;
   }
   .dark body {
-    background-image: radial-gradient(#1f2937 1px, transparent 1px);
+    background-image: radial-gradient(rgb(31 41 55 / 0.4) 1px, transparent 1px);
   }
 }
 
 @layer utilities {
-  .perspective-\[1000px\] {
-    perspective: 1000px;
-  }
   .transform-style-3d {
     transform-style: preserve-3d;
   }
+  .coin-face {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
   .backface-hidden {
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
   .rotate-y-0 {
     transform: rotateY(0deg);
@@ -155,12 +157,97 @@
   .animate-spin-slow-3d {
     animation: spin-slow-3d 3s infinite linear;
   }
+  .animate-coin-bounce {
+    animation: coin-bounce 2.2s cubic-bezier(0.18, 0.88, 0.2, 1) both;
+  }
+  .animate-cup-lift {
+    animation: cup-lift 220ms ease-out both;
+  }
+  .animate-cup-toss {
+    animation: cup-toss 1.8s cubic-bezier(0.2, 0.9, 0.15, 1) both;
+  }
+  .animate-cup-land {
+    animation: cup-land 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
   @keyframes spin-slow-3d {
     from {
       transform: rotateY(0deg);
     }
     to {
       transform: rotateY(360deg);
+    }
+  }
+  @keyframes coin-bounce {
+    0% {
+      transform: translateY(0) rotateZ(0deg) scale(1);
+    }
+    25% {
+      transform: translateY(-20px) rotateZ(-10deg) scale(1.03);
+    }
+    55% {
+      transform: translateY(-12px) rotateZ(8deg) scale(1.04);
+    }
+    100% {
+      transform: translateY(0) rotateZ(0deg) scale(1);
+    }
+  }
+  @keyframes cup-lift {
+    0% {
+      transform: translateY(0) rotate(0deg) scale(1);
+    }
+    100% {
+      transform: translateY(-12px) rotate(-6deg) scale(1.03);
+    }
+  }
+  @keyframes cup-toss {
+    0% {
+      transform: translateY(-12px) rotate(-6deg) scale(1.03);
+    }
+    20% {
+      transform: translateY(-18px) rotate(-8deg) scale(1.02);
+    }
+    50% {
+      transform: translateY(-24px) rotate(10deg) scale(1.05);
+    }
+    75% {
+      transform: translateY(6px) rotate(-4deg) scale(0.99);
+    }
+    100% {
+      transform: translateY(0) rotate(0deg) scale(1);
+    }
+  }
+  @keyframes cup-land {
+    0% {
+      transform: translateY(0) rotate(0deg) scale(1);
+    }
+    65% {
+      transform: translateY(4px) rotate(3deg) scale(0.995);
+    }
+    100% {
+      transform: translateY(0) rotate(var(--cup-final-tilt, 0deg)) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-spin-slow-3d,
+    .animate-coin-bounce,
+    .animate-cup-toss,
+    .animate-cup-lift,
+    .animate-cup-land,
+    .coin-flip-active,
+    .animate-spin,
+    .animate-pulse,
+    .animate-in {
+      animation: none !important;
+    }
+
+    .coin-flip-active,
+    .transition-transform,
+    .duration-300,
+    .duration-500,
+    .duration-700,
+    .duration-1000 {
+      transition-duration: 0.01ms !important;
     }
   }
 }
