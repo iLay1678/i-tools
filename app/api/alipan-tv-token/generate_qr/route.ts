@@ -2,8 +2,6 @@ interface ApiResponse<T> {
   data: T
 }
 
-export const runtime = 'edge'
-
 interface QrCodeData {
   qrCodeUrl: string
   sid: string

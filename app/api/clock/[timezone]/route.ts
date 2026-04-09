@@ -1,7 +1,5 @@
 import { getClockData, jsonResponse, optionsResponse, toErrorBody } from '@/lib/toolbox'
 
-export const runtime = 'edge'
-
 export function GET(
   request: Request,
   { params }: { params: Promise<{ timezone: string }> }

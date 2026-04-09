@@ -1,7 +1,5 @@
 import { getClockData, jsonResponse, optionsResponse, toErrorBody } from '@/lib/toolbox'
 
-export const runtime = 'edge'
-
 export function GET(request: Request) {
   try {
     return jsonResponse(getClockData(undefined, request.headers))

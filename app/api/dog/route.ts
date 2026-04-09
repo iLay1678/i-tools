@@ -1,7 +1,5 @@
 import { getRandomSoul, jsonResponse, optionsResponse, toErrorBody } from '@/lib/toolbox'
 
-export const runtime = 'edge'
-
 export function GET() {
   try {
     return jsonResponse(getRandomSoul())

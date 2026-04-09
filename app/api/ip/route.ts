@@ -1,7 +1,5 @@
 import { getIpGeo, jsonResponse, optionsResponse, toErrorBody } from '@/lib/toolbox'
 
-export const runtime = 'edge'
-
 export async function GET(request: Request) {
   try {
     return jsonResponse((await getIpGeo(undefined, request.headers)) as never)

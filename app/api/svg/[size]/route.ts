@@ -1,7 +1,5 @@
 import { getSvgPlaceholder, optionsResponse, textResponse, toErrorBody, jsonResponse } from '@/lib/toolbox'
 
-export const runtime = 'edge'
-
 export async function GET(
   _: Request,
   { params }: { params: Promise<{ size: string }> }

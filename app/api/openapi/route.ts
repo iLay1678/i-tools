@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
 
-export const runtime = 'edge'
-
 const openApiDocument = {
   openapi: '3.1.0',
   info: {

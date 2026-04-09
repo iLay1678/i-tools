@@ -1,7 +1,5 @@
 import { decrypt, getParams } from '@/utils/decode'
 
-export const runtime = 'edge'
-
 interface TokenResponseEncrypt {
   data: {
     ciphertext: string

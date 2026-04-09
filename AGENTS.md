@@ -4,7 +4,7 @@
 - Verified stack: Next.js 16 App Router, React 19, TypeScript `strict`, Tailwind CSS 4, Radix UI, Oxlint.
 - Use `npm` for local work. The repo is lockfile-first (`package-lock.json`). Docker alone installs with `pnpm` via Corepack.
 - Docker now builds on `node:22-alpine`; keep Node 22 compatibility when changing runtime-sensitive dependencies.
-- API routes should default to Edge Runtime (`export const runtime = 'edge'`) unless the handler or its dependencies require Node-only features such as `process`, Node built-ins, or libraries incompatible with Edge.
+- API routes currently do not set a default `runtime`; only add an explicit runtime when a route truly depends on a specific execution environment.
 - When making a release-level change, bump the version in `package.json` and `package-lock.json`, and record release notes in `README.md` under the update log section.
 - Keep README update log entries brief and user-facing; avoid implementation details or low-level technical notes there.
 
