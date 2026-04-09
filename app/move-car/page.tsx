@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { QRCodeSVG } from "qrcode.react";
 import { Car, MessageSquare, QrCode, Info, Copy, Zap, RotateCcw } from "lucide-react";
 
@@ -24,25 +22,20 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 
+const PHONE_NUMBER_REGEX = /^1[3-9]\d{9}$/;
 
-const formSchema = z.object({
-  plateNumber: z.string().min(1, "请输入车牌号"),
-  phoneNumber: z
-    .string()
-    .min(1, "请输入联系电话")
-    .regex(/^1[3-9]\d{9}$/, "请输入有效的手机号"),
-  token: z.string(),
-  uid: z.string(),
-  newEnergy: z.boolean(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = {
+  plateNumber: string;
+  phoneNumber: string;
+  token: string;
+  uid: string;
+  newEnergy: boolean;
+};
 
 export default function MoveCar() {
   const [generatedUrl, setGeneratedUrl] = useState("");
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
       plateNumber: "",
       phoneNumber: "",
@@ -105,12 +98,15 @@ export default function MoveCar() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="plateNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>车牌号</FormLabel>
+                    <FormField
+                      control={form.control}
+                      name="plateNumber"
+                      rules={{
+                        required: "请输入车牌号",
+                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>车牌号</FormLabel>
                         <FormControl>
                           <Input placeholder="如：京A12345" {...field} className="text-lg" />
                         </FormControl>
@@ -119,12 +115,19 @@ export default function MoveCar() {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="phoneNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>联系电话</FormLabel>
+                    <FormField
+                      control={form.control}
+                      name="phoneNumber"
+                      rules={{
+                        required: "请输入联系电话",
+                        pattern: {
+                          value: PHONE_NUMBER_REGEX,
+                          message: "请输入有效的手机号",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>联系电话</FormLabel>
                         <FormControl>
                           <Input placeholder="如：13800138000" {...field} className="text-lg" />
                         </FormControl>
