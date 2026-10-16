@@ -46,11 +46,11 @@
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.19",
-    "figlet": "^1.9.4",
+    "figlet": "^1.12.0",
     "js-beautify": "^1.15.4",
-    "js-yaml": "^4.1.1",
+    "js-yaml": "^4.3.2",
     "lucide-react": "^0.562.0",
-    "next": "^16.2.6",
+    "next": "^16.4.2",
     "next-themes": "^0.4.6",
     "postcss": "^8.5.6",
     "qrcode": "^1.5.4",
@@ -70,7 +70,7 @@
     "zod": "^4.2.1"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.18.0",
+    "@opennextjs/cloudflare": "^1.20.12",
     "@types/node": "^20.17.52",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.2.14",
@@ -79,10 +79,17 @@
     "typescript": "^5.8.3"
   },
   "overrides": {
-    "dompurify": "3.4.13",
+    "dompurify": "3.4.17",
     "minimatch": "10.2.5",
     "glob": "13.0.6",
     "editorconfig": "3.0.2",
-    "formdata-node": "6.0.3"
+    "formdata-node": "6.0.3",
+    "brace-expansion": "5.0.12",
+    "browserslist": "4.29.3",
+    "baseline-browser-mapping": "2.11.29",
+    "source-map-js": "1.2.2",
+    "sharp": "0.35.5",
+    "qs": "6.16.1",
+    "proxy-addr": "2.0.8"
   }
 }
