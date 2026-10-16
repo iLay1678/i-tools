@@ -1,0 +1,14 @@
+# pnpm 的配置文件（本仓库用 npm 管理依赖，此文件仅服务于 Docker 构建）。
+#
+# 背景：Dockerfile 通过 corepack 使用 pnpm 安装依赖（见 deps 阶段）。pnpm 自 v10.3
+# 起默认不允许依赖执行构建脚本，且 strictDepBuilds 默认为 true —— 一旦存在未审查
+# 的构建脚本，安装会直接以 ERR_PNPM_IGNORED_BUILDS 非零退出，导致镜像构建失败。
+#
+# 下列两个包需要执行 postinstall 来准备各自的原生二进制（esbuild 与 workerd 均为
+# 通过可选依赖分发的平台包），故显式放行。新增需要构建脚本的依赖时，pnpm 会提示
+# 并把遗漏项追加到本文件，届时确认其可信后把值改为 true 即可。
+#
+# ⚠️ 本文件必须在 Dockerfile 的 deps 阶段一并 COPY 进镜像，否则不生效。
+allowBuilds:
+  esbuild: true
+  workerd: true

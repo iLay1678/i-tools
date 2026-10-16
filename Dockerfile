@@ -9,7 +9,7 @@ FROM base as deps
 RUN apk add --no-cache libc6-compat
 RUN mkdir /app
 WORKDIR /app
-COPY package.json ./
+COPY package.json pnpm-workspace.yaml ./
 RUN pnpm i
 
 # Rebuild the source code only when needed
