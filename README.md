@@ -13,9 +13,13 @@
   基于 Next.js 16 + Tailwind CSS 4 + TypeScript 构建
 </p>
 
-<p align="center">当前版本：v1.0.12</p>
+<p align="center">当前版本：v1.1.0</p>
 
 ## 📝 更新日志
+
+### v1.1.0
+
+- 新增 10 款实用工具：JSON 转类型、curl 转代码、代码截图美化、WiFi/名片二维码、Markdown 表格互转、JSONPath / jq 查询、CSS 生成器、Flexbox 可视化、人民币大写金额、日期计算器。
 
 ### v1.0.12 
 
@@ -43,6 +47,11 @@
 8.  **PNG 转 SVG** (`/png-to-svg`): 将 PNG 包装为保留透明背景的 SVG。
 9.  **Mermaid 在线编辑** (`/mermaid`): 在线编辑 Mermaid 图表并实时生成 SVG 预览。
 10.  **HTML 转义** (`/html-escape`): HTML 实体编码/解码。
+11.  **JSON 转类型** (`/json-to-types`): JSON 一键生成 TS/Go/Rust 类型结构体。
+12.  **curl 转代码** (`/curl-converter`): curl 命令转 fetch/axios/requests 代码。
+13.  **JSONPath / jq 查询** (`/jq`): JSONPath 子集与 jq 路径查询。
+14.  **CSS 生成器** (`/css-gen`): 渐变、阴影、圆角 CSS 可视化生成。
+15.  **Flexbox 可视化** (`/flex-grid`): Flex 布局可视化调试与 CSS 生成。
 
 ### 📝 文本工具 (Text Tools)
 1.  **文字格式化** (`/text-formatter`): 中英文盘古之白空格、符号修正。
@@ -65,6 +74,7 @@
 3.  **ASCII 艺术** (`/ascii-art`): 文字转字符画。
 4.  **图片转像素画** (`/image-to-pixel`): 图片像素化风格转换。
 5.  **图片 Base64** (`/image-base64`): 图片文件与 Base64 字符串互转。
+6.  **WiFi/名片二维码** (`/qrcode-wifi`): WiFi、名片、短信二维码生成。
 
 ### 🧮 转换与计算 (Converters & Calc)
 1.  **时间戳转换** (`/timestamp`): Unix 时间戳与日期互转。
@@ -72,10 +82,14 @@
 3.  **IP 进制转换** (`/ip-radix`): IP 地址与整数/二进制转换。
 4.  **IP 子网计算** (`/ip-calc`): CIDR 子网划分计算。
 5.  **CSV/JSON 互转** (`/csv-json`): 数据格式互相转换。
+6.  **Markdown 表格互转** (`/md-table`): Markdown 表格与 CSV 双向互转。
+7.  **人民币大写金额** (`/rmb`): 数字金额转规范中文大写。
+8.  **日期计算器** (`/date-calc`): 日期间隔、加减与工作日计算。
 
 ### 🎲 生成与随机 (Generation)
 1.  **UUID 生成** (`/uuid`): 批量生成 Version 1/4 UUID。
 2.  **随机密码生成** (`/random-string`): 高强度随机密码生成器。
+3.  **代码截图美化** (`/code-shot`): 代码渲染为带行号与渐变背景的图片。
 
 ### 🧭 决策工具 (Decision)
 1.  **大转盘抽奖** (`/wheel`): 支持权重、去重的随机决策工具。
