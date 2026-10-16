@@ -1,8 +1,109 @@
 include:
-  - https://cnb.cool/ilay1678/templates/-/blob/main/ci/docker.cnb.yml
-  - https://cnb.cool/ilay1678/templates/-/blob/main/ci/docker.ghcr.yml
   - https://cnb.cool/ilay1678/templates/-/blob/main/ci/sync_to_github.yml
+
+# ══════════════════════════════════════════════════════════════════════════
+# 镜像构建与发布（多架构 buildx → CNB Registry → ghcr.io）
+#
+# 以下三步流水线原为远程模板 docker.cnb.yml / docker.ghcr.yml，但它们把
+# 定义挂在 `$: tag_push` 下；而 sync_to_github.yml 自 2026-09-22 起改用
+# `v*: tag_push`。CNB 中更具体的通配键会遮蔽 `$` 下的同事件定义，导致打
+# tag 时只剩「sync to github」被触发，镜像静默地不再构建与发布。
+#
+# 故在此内联并统一挂到 `v*: tag_push`，与 sync 走同一触发路径。
+# 同步更新：ilay1678/templates 的 ci/docker.cnb.yml、ci/docker.ghcr.yml。
+# ══════════════════════════════════════════════════════════════════════════
+
+.make-image-envs-cnb: &make-image-envs-cnb
+  - name: set IMAGE_NAME
+    script: echo -n "ilay1678/mirrors/${CNB_REPO_NAME}"
+    exports:
+      info: IMAGE_NAME
+  - name: set IMAGE_VERSION
+    script: echo -n "$CNB_BRANCH" | cut -d "/" -f1
+    exports:
+      info: IMAGE_VERSION
+  - name: set IMAGE_NAME_WITH_TAG
+    script: echo -n "${CNB_DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_VERSION}"
+    exports:
+      info: IMAGE_NAME_WITH_TAG
+  - name: set IMAGE_NAME_WITH_TAG_LATEST
+    script: echo -n "${CNB_DOCKER_REGISTRY}/${IMAGE_NAME}:latest"
+    exports:
+      info: IMAGE_NAME_WITH_TAG_LATEST
+
+.build-docker-image-cnb: &build-docker-image-cnb
+  - name: docker login for docker.cnb.cool
+    script: docker login -u "$CNB_TOKEN_USER_NAME" -p "$CNB_TOKEN" $CNB_DOCKER_REGISTRY
+  - name: docker build & push
+    script:
+      - docker buildx build -t ${IMAGE_NAME_WITH_TAG} -t ${IMAGE_NAME_WITH_TAG_LATEST} --platform linux/amd64,linux/arm64 --push .
+  - name: resolve
+    type: cnb:resolve
+    options:
+      key: build-cnb-multi-arch
+
+.multi-arch-build-cnb: &multi-arch-build-cnb
+  name: build-amd64-cnb
+  runner:
+    tags: cnb:arch:amd64
+  services:
+    - name: docker
+      options:
+        rootlessBuildkitd:
+          enabled: true
+  stages:
+    - *make-image-envs-cnb
+    - *build-docker-image-cnb
+
+.push-ghcr: &push-ghcr
+  - name: install skopeo
+    script:
+      - apt-get update && apt-get install -y skopeo
+  - name: login to docker.cnb.cool
+    script: skopeo login -u "$CNB_TOKEN_USER_NAME" -p "$CNB_TOKEN" $CNB_DOCKER_REGISTRY
+  - name: login to ghcr.io
+    script: skopeo login -u "$PACKAGE_USERNAME" -p "$GITHUB_TOKEN" ghcr.io
+  - name: await the build-cnb-multi-arch
+    type: cnb:await
+    options:
+      key: build-cnb-multi-arch
+  - name: set IMAGE_NAME_WITH_TAG_GHCR
+    script: echo -n "ghcr.io/$CNB_REPO_SLUG:$IMAGE_VERSION"
+    exports:
+      info: IMAGE_NAME_WITH_TAG_GHCR
+  - name: set IMAGE_NAME_WITH_TAG_GHCR_LATEST
+    script: echo -n "ghcr.io/$CNB_REPO_SLUG:latest"
+    exports:
+      info: IMAGE_NAME_WITH_TAG_GHCR_LATEST
+  - name: sync images
+    script:
+      - skopeo copy --all docker://$IMAGE_NAME_WITH_TAG docker://$IMAGE_NAME_WITH_TAG_GHCR
+  - name: sync images latest
+    script:
+      - skopeo copy --all docker://$IMAGE_NAME_WITH_TAG_LATEST docker://$IMAGE_NAME_WITH_TAG_GHCR_LATEST
+
+.ghcr-job-cnb: &ghcr-job-cnb
+  name: push-ghcr
+  runner:
+    cpus: 1
+  imports: https://cnb.cool/ilay1678/secrets/-/blob/main/github.yml
+  services:
+    - docker
+  stages:
+    - *make-image-envs-cnb
+    - *push-ghcr
+
+# 推送 v* 标签：构建镜像并发布
+v*:
+  tag_push:
+    - *multi-arch-build-cnb
+    - *ghcr-job-cnb
+
+# 手动触发（网页「运行流水线」）：用于补发或重发镜像
 $:
+  web_trigger:
+    - *multi-arch-build-cnb
+    - *ghcr-job-cnb
   vscode:
     - docker:
         # 指定开发环境镜像，可以是任意可访问的镜像
